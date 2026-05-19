@@ -27,7 +27,7 @@ services:
       - /app/.next
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
-    command: pnpm dev
+    command: npm run dev
     depends_on:
       - backend
     restart: unless-stopped
