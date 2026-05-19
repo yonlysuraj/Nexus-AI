@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,32 +10,32 @@
 
 :root {
   /* Light Theme */
-  --bg-primary: #fafafa;
+  --bg-primary: #f7f4ef;
   --bg-secondary: #ffffff;
-  --bg-tertiary: #f5f5f5;
-  --border: #e5e5e5;
-  --text-primary: #171717;
-  --text-secondary: #525252;
-  --text-muted: #a3a3a3;
-  --accent-primary: #7c3aed;
-  --accent-secondary: #0891b2;
-  --success: #059669;
-  --warning: #d97706;
+  --bg-tertiary: #efe9e2;
+  --border: #e5ded6;
+  --text-primary: #1f1f1d;
+  --text-secondary: #4b4a45;
+  --text-muted: #8b8378;
+  --accent-primary: #f97316;
+  --accent-secondary: #2563eb;
+  --success: #0f766e;
+  --warning: #b45309;
   --error: #dc2626;
 }
 
 .dark {
   /* Dark Theme */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #13131a;
-  --bg-tertiary: #1c1c27;
-  --border: #2a2a3a;
-  --text-primary: #f0f0f5;
-  --text-secondary: #a0a0b5;
-  --text-muted: #6b6b80;
-  --accent-primary: #7c3aed;
-  --accent-secondary: #06b6d4;
-  --success: #10b981;
+  --bg-primary: #0b0b0b;
+  --bg-secondary: #151515;
+  --bg-tertiary: #1f1f1f;
+  --border: #2a2a2a;
+  --text-primary: #f5f1ea;
+  --text-secondary: #b9b2a7;
+  --text-muted: #80786d;
+  --accent-primary: #fb923c;
+  --accent-secondary: #60a5fa;
+  --success: #14b8a6;
   --warning: #f59e0b;
   --error: #ef4444;
 }
@@ -55,7 +55,7 @@ html {
 }
 
 body {
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family: "Sora", system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
@@ -90,14 +90,14 @@ body {
    ============================== */
 
 .glass {
-  background: rgba(19, 19, 26, 0.6);
+  background: rgba(21, 21, 21, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
 }
 
 .dark .glass {
-  background: rgba(19, 19, 26, 0.6);
+  background: rgba(21, 21, 21, 0.6);
 }
 
 .light .glass,
@@ -156,7 +156,7 @@ body {
    ============================== */
 
 ::selection {
-  background-color: rgba(124, 58, 237, 0.3);
+  background-color: rgba(249, 115, 22, 0.3);
   color: var(--text-primary);
 }
 

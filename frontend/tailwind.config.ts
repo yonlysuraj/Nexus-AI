@@ -34,16 +34,16 @@ const config: Config = {
 
         // Tool category colors
         category: {
-          dev: "#7c3aed",
-          content: "#06b6d4",
-          productivity: "#10b981",
-          career: "#f59e0b",
-          finance: "#f43f5e",
+          dev: "#2563eb",
+          content: "#14b8a6",
+          productivity: "#f97316",
+          career: "#eab308",
+          finance: "#ef4444",
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "Fira Code", "monospace"],
+        sans: ["Sora", "system-ui", "sans-serif"],
+        mono: ["Space Mono", "ui-monospace", "monospace"],
       },
       borderRadius: {
         xl: "12px",
