@@ -49,6 +49,7 @@ logs/
 *.db
 *.sqlite3
 uploads/
+planner/
 
 # ===========================
 # Docker
