@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import AnyHttpUrl
 from typing import List, Optional
+from pathlib import Path
 
 class Settings(BaseSettings):
     # App Settings
@@ -41,10 +42,10 @@ class Settings(BaseSettings):
     MAX_ARCHIVE_SIZE: int = 52428800    # 50MB
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(Path(__file__).resolve().parents[3] / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=True,
         extra="ignore"
     )
 
-settings = Settings()
+settings = Settings()  # pyright: ignore[reportCallIssue]
