@@ -57,7 +57,9 @@ async def health_check():
 from .api.v1.linkedin import router as linkedin_router
 from .api.v1.webpage_summary import router as webpage_summary_router
 from .api.v1.readme_gen import router as readme_gen_router
+from .api.v1.code_explainer import router as code_explainer_router
 
 app.include_router(linkedin_router)
 app.include_router(webpage_summary_router)
 app.include_router(readme_gen_router)
+app.include_router(code_explainer_router)
