@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import AsyncGenerator, Optional, Dict, Any, List
+import base64
 import json
 from loguru import logger
 import groq
@@ -29,6 +30,18 @@ class LLMProvider(ABC):
     async def stream(self, prompt: str, system: str = "", **kwargs) -> AsyncGenerator[str, None]:
         pass
 
+    async def generate_with_image(
+        self, prompt: str, image_bytes: bytes, mime_type: str = "image/jpeg",
+        system: str = "", **kwargs
+    ) -> str:
+        """Generate a response from a text prompt + image (vision/multimodal).
+        
+        Override in subclasses that support vision. Falls back to text-only
+        generation with a warning if not overridden.
+        """
+        logger.warning(f"{self.__class__.__name__} does not support vision — falling back to text-only.")
+        return await self.generate(prompt, system=system, **kwargs)
+
 class GroqProvider(LLMProvider):
     def __init__(self, api_key: str):
         if not api_key:
@@ -56,6 +69,40 @@ class GroqProvider(LLMProvider):
         except Exception as e:
             logger.error(f"Groq generation failed: {e}")
             raise ProviderUnavailableError(f"Groq unavailable: {e}") from e
+
+    async def generate_with_image(
+        self, prompt: str, image_bytes: bytes, mime_type: str = "image/jpeg",
+        system: str = "", **kwargs
+    ) -> str:
+        """Send an image + text prompt to a Groq vision model (e.g. Llama 4 Scout)."""
+        model = kwargs.get("model", self.default_model)
+        b64 = base64.b64encode(image_bytes).decode("utf-8")
+        data_uri = f"data:{mime_type};base64,{b64}"
+
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                {"type": "image_url", "image_url": {"url": data_uri}},
+            ],
+        })
+
+        try:
+            response = await self.client.chat.completions.create(
+                messages=messages,
+                model=model,
+                temperature=kwargs.get("temperature", 0.3),
+            )
+            return response.choices[0].message.content
+        except groq.RateLimitError as e:
+            logger.warning(f"Groq Rate Limit Exceeded (vision): {e}")
+            raise RateLimitError("Groq rate limit exceeded") from e
+        except Exception as e:
+            logger.error(f"Groq vision generation failed: {e}")
+            raise ProviderUnavailableError(f"Groq vision unavailable: {e}") from e
 
     async def stream(self, prompt: str, system: str = "", **kwargs) -> AsyncGenerator[str, None]:
         model = kwargs.get("model", self.default_model)
@@ -105,6 +152,37 @@ class OpenAIProvider(LLMProvider):
         except Exception as e:
             logger.error(f"OpenAI generation failed: {e}")
             raise ProviderUnavailableError(f"OpenAI unavailable: {e}") from e
+
+    async def generate_with_image(
+        self, prompt: str, image_bytes: bytes, mime_type: str = "image/jpeg",
+        system: str = "", **kwargs
+    ) -> str:
+        """Send an image + text prompt to an OpenAI vision model."""
+        model = kwargs.get("model", "gpt-4o-mini")
+        b64 = base64.b64encode(image_bytes).decode("utf-8")
+        data_uri = f"data:{mime_type};base64,{b64}"
+
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                {"type": "image_url", "image_url": {"url": data_uri}},
+            ],
+        })
+
+        try:
+            response = await self.client.chat.completions.create(
+                messages=messages,
+                model=model,
+                temperature=kwargs.get("temperature", 0.3),
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"OpenAI vision generation failed: {e}")
+            raise ProviderUnavailableError(f"OpenAI vision unavailable: {e}") from e
 
     async def stream(self, prompt: str, system: str = "", **kwargs) -> AsyncGenerator[str, None]:
         model = kwargs.get("model", self.default_model)
@@ -292,6 +370,38 @@ class AIEngine:
                 continue
                 
         logger.error(f"All AI providers failed for streaming. Last error: {last_error}")
+        raise AllProvidersFailedError(last_error)
+
+    async def generate_with_image(
+        self, prompt: str, image_bytes: bytes, mime_type: str = "image/jpeg",
+        system: str = "", **kwargs
+    ) -> str:
+        """Generate a response from a text prompt + image using the fallback chain."""
+        last_error = None
+        for provider_name in self.fallback_order:
+            provider = self.providers.get(provider_name)
+            if provider is None:
+                continue
+
+            logger.debug(f"Attempting vision generation with {provider_name}")
+            try:
+                return await provider.generate_with_image(
+                    prompt, image_bytes, mime_type=mime_type, system=system, **kwargs
+                )
+            except RateLimitError:
+                logger.warning(f"{provider_name} rate limited (vision), trying next...")
+                last_error = "rate_limited"
+                continue
+            except ProviderUnavailableError:
+                logger.warning(f"{provider_name} unavailable (vision), trying next...")
+                last_error = "unavailable"
+                continue
+            except Exception as e:
+                logger.error(f"Unexpected error with {provider_name} (vision): {e}")
+                last_error = "unexpected_error"
+                continue
+
+        logger.error(f"All AI providers failed for vision. Last error: {last_error}")
         raise AllProvidersFailedError(last_error)
 
 ai_engine = AIEngine()

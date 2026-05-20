@@ -2,9 +2,8 @@ FROM mcr.microsoft.com/playwright/python:v1.49.1-jammy
 
 WORKDIR /app
 
-# Install system dependencies for Tesseract, ffmpeg
+# Install system dependencies for ffmpeg
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    tesseract-ocr \
     ffmpeg \
     git \
     && rm -rf /var/lib/apt/lists/*

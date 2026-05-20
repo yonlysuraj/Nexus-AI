@@ -112,7 +112,7 @@ docker-compose up
 | **AI** | Groq API (free), Ollama (local), OpenAI (optional) |
 | **Database** | SQLite (dev) / PostgreSQL (prod) |
 | **Speech** | Whisper (local, free) |
-| **OCR** | Tesseract (local, free) |
+| **OCR** | Llama 4 Scout Vision (via Groq API) |
 
 ---
 
