@@ -53,5 +53,7 @@ async def health_check():
         "environment": settings.ENVIRONMENT
     }
 
-# Include routers here later
-# app.include_router(api_router, prefix="/api/v1")
+# Tool routers
+from .api.v1.linkedin import router as linkedin_router
+
+app.include_router(linkedin_router)
