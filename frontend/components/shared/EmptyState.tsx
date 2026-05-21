@@ -5,6 +5,8 @@ type EmptyStateProps = {
   title: string;
   description?: string;
   action?: ReactNode;
+  actionLabel?: string;
+  onAction?: () => void;
   className?: string;
 };
 
@@ -12,8 +14,21 @@ export function EmptyState({
   title,
   description,
   action,
+  actionLabel,
+  onAction,
   className,
 }: EmptyStateProps) {
+  const fallbackAction =
+    actionLabel && onAction ? (
+      <button
+        type="button"
+        onClick={onAction}
+        className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+      >
+        {actionLabel}
+      </button>
+    ) : null;
+
   return (
     <div
       className={cn(
@@ -25,7 +40,7 @@ export function EmptyState({
       {description ? (
         <p className="text-sm text-foreground-secondary">{description}</p>
       ) : null}
-      {action ? <div>{action}</div> : null}
+      {action || fallbackAction ? <div>{action ?? fallbackAction}</div> : null}
     </div>
   );
 }

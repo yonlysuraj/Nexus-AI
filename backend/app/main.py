@@ -58,8 +58,18 @@ from .api.v1.linkedin import router as linkedin_router
 from .api.v1.webpage_summary import router as webpage_summary_router
 from .api.v1.readme_gen import router as readme_gen_router
 from .api.v1.code_explainer import router as code_explainer_router
+from .api.v1.voice_memo_tasks import router as voice_memo_tasks_router
+from .api.v1.changelog import router as changelog_router
+from .api.v1.test_generator import router as test_generator_router
+from .api.v1.youtube_to_blog import router as youtube_to_blog_router
+from .api.v1.resume_optimizer import router as resume_optimizer_router
 
 app.include_router(linkedin_router)
 app.include_router(webpage_summary_router)
 app.include_router(readme_gen_router)
 app.include_router(code_explainer_router)
+app.include_router(voice_memo_tasks_router)
+app.include_router(changelog_router)
+app.include_router(test_generator_router)
+app.include_router(youtube_to_blog_router)
+app.include_router(resume_optimizer_router)

@@ -49,14 +49,14 @@ export const tools: ToolSummary[] = [
     title: "YouTube to Blog Post",
     description: "Convert a video into an SEO-ready article draft.",
     category: "content",
-    href: "/tools/youtube-blog",
+    href: "/tools/youtube-to-blog",
   },
   {
     id: "voice-to-tasks",
     title: "Voice Memos to Tasks",
     description: "Turn audio notes into a clean task list.",
     category: "productivity",
-    href: "/tools/voice-to-tasks",
+    href: "/tools/voice-memos-to-tasks",
   },
   {
     id: "git-changelog",
