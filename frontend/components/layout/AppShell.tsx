@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { EmailGate } from "@/components/shared/EmailGate";
 import { cn } from "@/lib/utils";
 
 type AppShellProps = {
@@ -17,12 +18,14 @@ export function AppShell({ children, className }: AppShellProps) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.5),transparent_55%)] dark:bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.08),transparent_55%)]" />
       </div>
 
-      <Header />
+      <EmailGate>
+        <Header />
 
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 pb-16 pt-8 lg:grid-cols-[260px_1fr]">
-        <Sidebar />
-        <main className="min-w-0">{children}</main>
-      </div>
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 pb-16 pt-8 lg:grid-cols-[260px_1fr]">
+          <Sidebar />
+          <main className="min-w-0">{children}</main>
+        </div>
+      </EmailGate>
     </div>
   );
 }
