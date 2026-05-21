@@ -66,7 +66,8 @@ class ReceiptScannerService:
                 system=system_prompt,
                 image_bytes=image_bytes,
                 mime_type="image/jpeg",
-                temperature=0.1 # Low temperature for factual extraction
+                temperature=0.1, # Low temperature for factual extraction
+                model="llama-3.2-11b-vision-preview"
             )
             
             # Clean response text to extract json if it contains markdown
