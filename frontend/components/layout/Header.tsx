@@ -14,7 +14,7 @@ export function Header() {
   const isDark = mounted ? theme === "dark" : false;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-primary/15 text-accent-primary">
@@ -26,7 +26,7 @@ export function Header() {
           </div>
         </div>
 
-        <div className="hidden w-full max-w-md items-center gap-2 rounded-full border border-border/70 bg-background-secondary/80 px-4 py-2 text-sm text-foreground-muted shadow-sm lg:flex">
+        <div className="hidden w-full max-w-md items-center gap-2 rounded-full border border-border bg-background-secondary/80 px-4 py-2 text-sm text-foreground-muted shadow-sm lg:flex">
           <span className="text-xs uppercase tracking-[0.2em] text-foreground-muted">Search</span>
           <input
             placeholder="Find a tool or feature"
@@ -39,7 +39,7 @@ export function Header() {
             type="button"
             onClick={() => setTheme(isDark ? "light" : "dark")}
             className={cn(
-              "rounded-full border border-border/70 px-3 py-2 text-xs font-medium uppercase tracking-wide transition-default",
+              "rounded-full border border-border px-3 py-2 text-xs font-medium uppercase tracking-wide transition-default",
               "hover:border-accent-primary/50 hover:text-accent-primary"
             )}
           >
@@ -49,7 +49,7 @@ export function Header() {
             href="https://github.com/yonlysuraj/Nexus-AI"
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-border/70 px-3 py-2 text-xs font-medium uppercase tracking-wide text-foreground-muted transition-default hover:border-accent-secondary/60 hover:text-accent-secondary"
+            className="rounded-full border border-border px-3 py-2 text-xs font-medium uppercase tracking-wide text-foreground-muted transition-default hover:border-accent-secondary/60 hover:text-accent-secondary"
           >
             GitHub
           </Link>

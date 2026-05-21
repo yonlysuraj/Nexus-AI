@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <AppShell>
       <section className="space-y-8">
-        <div className="rounded-3xl border border-border/70 bg-background-secondary/70 p-8 shadow-sm">
+        <div className="rounded-3xl border border-border bg-background-secondary/70 p-8 shadow-sm">
           <p className="text-xs uppercase tracking-[0.3em] text-foreground-muted">
             NexusAI Platform
           </p>
@@ -53,7 +53,7 @@ export default function Home() {
             <Link
               key={tool.id}
               href={tool.href}
-              className="group rounded-2xl border border-border/70 bg-background-secondary/70 p-6 shadow-sm transition-default hover:-translate-y-1 hover:border-accent-primary/60 hover:shadow-lg"
+              className="group rounded-2xl border border-border bg-background-secondary p-6 shadow-sm transition-default hover:-translate-y-1 hover:border-accent-primary/60 hover:shadow-lg"
             >
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.2em] text-foreground-muted">

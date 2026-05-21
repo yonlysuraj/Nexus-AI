@@ -24,7 +24,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden flex-col gap-6 lg:flex">
-      <div className="rounded-2xl border border-border/70 bg-background-secondary/70 p-5 shadow-sm">
+      <div className="rounded-2xl border border-border bg-background-secondary p-5 shadow-sm">
         <p className="text-sm font-semibold">Tool Categories</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {categories.map((category) => (
@@ -40,7 +40,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/70 bg-background-secondary/70 p-5 shadow-sm">
+      <div className="rounded-2xl border border-border bg-background-secondary p-5 shadow-sm">
         <p className="text-sm font-semibold">Quick Links</p>
         <ul className="mt-4 space-y-3 text-sm text-foreground-secondary">
           {tools.slice(0, 6).map((tool) => (
@@ -56,7 +56,7 @@ export function Sidebar() {
         </ul>
       </div>
 
-      <div className="rounded-2xl border border-border/70 bg-background-secondary/70 p-5 text-sm text-foreground-secondary shadow-sm">
+      <div className="rounded-2xl border border-border bg-background-secondary p-5 text-sm text-foreground-secondary shadow-sm">
         <p className="text-sm font-semibold">Status</p>
         <p className="mt-3">
           Phase 0: Foundation setup in progress. Dashboard and core components
