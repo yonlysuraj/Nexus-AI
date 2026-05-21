@@ -66,6 +66,7 @@ from .api.v1.test_generator import router as test_generator_router
 from .api.v1.youtube_to_blog import router as youtube_to_blog_router
 from .api.v1.resume_optimizer import router as resume_optimizer_router
 from .api.v1.receipt_tracker import router as receipt_tracker_router
+from .api.v1.visitors import router as visitors_router
 
 app.include_router(linkedin_router)
 app.include_router(webpage_summary_router)
@@ -77,6 +78,7 @@ app.include_router(test_generator_router)
 app.include_router(youtube_to_blog_router)
 app.include_router(resume_optimizer_router)
 app.include_router(receipt_tracker_router)
+app.include_router(visitors_router)
 
 # Mount static files for receipts
 receipts_dir = os.path.join(settings.DATA_DIR, "receipts")

@@ -16,9 +16,19 @@ export function EmailGate({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !email.includes("@")) return;
+    
+    try {
+      await fetch("http://localhost:8000/api/v1/visitors/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+    } catch (error) {
+      console.error("Failed to capture email", error);
+    }
     
     localStorage.setItem("nexus_user_email", email.trim());
     setHasAccess(true);
