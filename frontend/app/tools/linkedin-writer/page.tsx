@@ -13,6 +13,7 @@ import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { useStream } from "@/lib/useStream";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
 const TONES = [
   { value: "professional", label: "Professional", emoji: "💼" },
@@ -48,6 +49,8 @@ export default function LinkedInWriterPage() {
       body: JSON.stringify({ bullets: bullets.trim(), tone }),
     });
   }, [bullets, tone, canGenerate, start]);
+
+  useKeyboardShortcut(handleGenerate, !canGenerate);
 
   const handleTryExample = useCallback(() => {
     setBullets(SAMPLE_BULLETS);

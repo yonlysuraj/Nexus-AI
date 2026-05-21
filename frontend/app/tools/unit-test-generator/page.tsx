@@ -8,6 +8,7 @@ import { ToolPageTemplate } from '@/components/shared/ToolPageTemplate';
 import { TestGeneratorInput } from '@/components/shared/TestGeneratorInput';
 import { TestCodeDisplay } from '@/components/shared/TestCodeDisplay';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { OutputSkeleton } from '@/components/shared/OutputSkeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { OutputCard } from '@/components/shared/OutputCard';
 import { downloadTestFile } from '@/lib/testExport';
@@ -106,7 +107,12 @@ export default function UnitTestGeneratorPage() {
                 exit={{ opacity: 0 }}
                 className="py-12"
               >
-                <LoadingSpinner label="Analyzing code and generating tests..." />
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <LoadingSpinner label="Analyzing code and generating tests..." />
+                  </div>
+                  <OutputSkeleton />
+                </div>
               </motion.div>
             )}
 

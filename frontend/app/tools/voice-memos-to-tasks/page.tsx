@@ -10,6 +10,7 @@ import { MicrophoneRecorder } from '@/components/shared/MicrophoneRecorder';
 import { TranscriptDisplay } from '@/components/shared/TranscriptDisplay';
 import { TaskList } from '@/components/shared/TaskList';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { OutputSkeleton } from '@/components/shared/OutputSkeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { OutputCard } from '@/components/shared/OutputCard';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +21,7 @@ import {
   generateFilename,
 } from '@/lib/taskExport';
 import { cn } from '@/lib/utils';
+import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
 
 interface Task {
   description: string;
@@ -104,6 +106,8 @@ export default function VoiceMemosPage() {
     }
     await processAudio(selectedFile);
   };
+
+  useKeyboardShortcut(handleUploadClick, isLoading || !selectedFile);
 
   const handleExportMarkdown = () => {
     if (!result) return;
@@ -260,8 +264,11 @@ export default function VoiceMemosPage() {
                 exit={{ opacity: 0 }}
                 className="py-12"
               >
-                <div className="flex flex-col items-center justify-center">
-                  <LoadingSpinner label="Processing your audio... This may take a minute." />
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <LoadingSpinner label="Processing your audio... This may take a minute." />
+                  </div>
+                  <OutputSkeleton />
                 </div>
               </motion.div>
             )}

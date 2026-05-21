@@ -12,10 +12,12 @@ import { KeywordComparison } from "@/components/shared/KeywordComparison";
 import { OptimizationSuggestions } from "@/components/shared/OptimizationSuggestions";
 import { ATSTips } from "@/components/shared/ATSTips";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { OutputSkeleton } from "@/components/shared/OutputSkeleton";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
 type MatchResult = {
   match_score: number;
@@ -92,6 +94,8 @@ export default function ResumeOptimizerPage() {
     }
   };
 
+  useKeyboardShortcut(handleAnalyze, !canAnalyze);
+
   return (
     <AppShell>
       <ToolPageTemplate
@@ -159,7 +163,12 @@ export default function ResumeOptimizerPage() {
             />
           ) : null}
 
-          {isLoading ? <LoadingSpinner label="Analyzing resume match..." /> : null}
+          {isLoading ? (
+            <div className="flex flex-col gap-4">
+              <LoadingSpinner label="Analyzing resume match..." />
+              <OutputSkeleton />
+            </div>
+          ) : null}
 
           <div ref={resultsRef} className="space-y-6">
             {result ? (

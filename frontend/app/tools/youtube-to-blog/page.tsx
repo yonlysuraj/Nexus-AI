@@ -8,6 +8,7 @@ import { ToolPageTemplate } from '@/components/shared/ToolPageTemplate';
 import { YouTubeInput } from '@/components/shared/YouTubeInput';
 import { BlogPostPreview } from '@/components/shared/BlogPostPreview';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { OutputSkeleton } from '@/components/shared/OutputSkeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { OutputCard } from '@/components/shared/OutputCard';
 import { downloadBlogPost } from '@/lib/blogExport';
@@ -109,11 +110,14 @@ export default function YouTubeToBlogPage() {
                 exit={{ opacity: 0 }}
                 className="py-12"
               >
-                <div className="flex flex-col items-center justify-center">
-                  <LoadingSpinner label="Extracting transcript and generating blog post..." />
-                  <p className="mt-2 text-sm text-foreground-muted">
-                    This may take a few moments if we need to transcribe the video
-                  </p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <LoadingSpinner label="Extracting transcript and generating blog post..." />
+                    <p className="text-sm text-foreground-muted">
+                      This may take a few moments if we need to transcribe the video
+                    </p>
+                  </div>
+                  <OutputSkeleton />
                 </div>
               </motion.div>
             )}

@@ -14,6 +14,7 @@ import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { useStream } from "@/lib/useStream";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
 const SAMPLE_URL = "https://github.com/fastapi/fastapi";
 
@@ -44,6 +45,8 @@ export default function ReadmeGeneratorPage() {
       body: JSON.stringify({ repo_url: repoUrl.trim() }),
     });
   }, [repoUrl, canGenerate, start]);
+
+  useKeyboardShortcut(handleGenerate, !canGenerate);
 
   const handleTryExample = useCallback(() => {
     setRepoUrl(SAMPLE_URL);
@@ -104,9 +107,6 @@ export default function ReadmeGeneratorPage() {
                 !urlValid &&
                   "border-error/60 focus:border-error/60 focus:ring-error/30"
               )}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && canGenerate) handleGenerate();
-              }}
             />
             {!urlValid && (
               <p className="text-xs text-error">

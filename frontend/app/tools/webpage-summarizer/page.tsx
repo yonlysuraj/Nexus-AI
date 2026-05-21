@@ -13,6 +13,7 @@ import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { useStream } from "@/lib/useStream";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
 const LEVELS = [
   { value: "tldr", label: "TL;DR", description: "1-2 sentence summary" },
@@ -60,6 +61,8 @@ export default function WebpageSummarizerPage() {
       body: JSON.stringify({ url: url.trim(), level }),
     });
   }, [url, level, canGenerate, start]);
+
+  useKeyboardShortcut(handleGenerate, !canGenerate);
 
   const handleTryExample = useCallback(() => {
     setUrl(SAMPLE_URL);
@@ -124,9 +127,6 @@ export default function WebpageSummarizerPage() {
                     !urlValid &&
                     "border-error/60 focus:border-error/60 focus:ring-error/30"
                 )}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && canGenerate) handleGenerate();
-                }}
               />
             </div>
             {url.trim().length > 0 && !urlValid && (

@@ -13,6 +13,7 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { useStream } from "@/lib/useStream";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
@@ -86,6 +87,8 @@ export default function CodeExplainerPage() {
       body: JSON.stringify(payload),
     });
   }, [canGenerate, code, level, language, start]);
+
+  useKeyboardShortcut(handleGenerate, !canGenerate);
 
   const handleTryExample = useCallback(() => {
     setCode(SAMPLE_CODE);

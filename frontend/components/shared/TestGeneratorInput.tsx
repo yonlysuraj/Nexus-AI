@@ -1,8 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
+
+const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
+  ssr: false,
+});
 
 // Language and framework mapping
 const FRAMEWORK_BY_LANGUAGE: Record<string, string[]> = {
@@ -22,6 +28,15 @@ interface TestGeneratorInputProps {
   isLoading?: boolean;
   error?: string | null;
 }
+
+const SAMPLE_CODE = `def calculate_total(items, tax_rate):
+    """Calculate total with tax."""
+    if not items:
+        return 0
+    if tax_rate < 0:
+        raise ValueError("Tax rate cannot be negative")
+    subtotal = sum(items)
+    return subtotal * (1 + tax_rate)`;
 
 export function TestGeneratorInput({ onSubmit, isLoading = false, error }: TestGeneratorInputProps) {
   const [code, setCode] = useState('');
@@ -43,6 +58,14 @@ export function TestGeneratorInput({ onSubmit, isLoading = false, error }: TestG
     onSubmit({ code, language, framework, detailLevel });
   };
 
+  useKeyboardShortcut(handleSubmit, isLoading || !code.trim());
+
+  const handleTryExample = () => {
+    setLanguage('python');
+    setFramework('pytest');
+    setCode(SAMPLE_CODE);
+  };
+
   const availableFrameworks = FRAMEWORK_BY_LANGUAGE[language] || [];
 
   return (
@@ -52,21 +75,34 @@ export function TestGeneratorInput({ onSubmit, isLoading = false, error }: TestG
         <label className="block text-sm font-semibold text-foreground mb-1">
           Code Snippet
         </label>
-        <p className="text-xs text-foreground-muted mb-3">
-          Paste your function, method, or class here
-        </p>
-        <textarea
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          disabled={isLoading}
-          placeholder={`// Python example:\ndef calculate_total(items, tax_rate):\n    """Calculate total with tax."""\n    return sum(items) * (1 + tax_rate)`}
-          className={cn(
-            "w-full h-64 px-4 py-3 rounded-xl border border-border bg-background/70 font-mono text-sm leading-relaxed text-foreground",
-            "placeholder:text-foreground-muted transition-default resize-none",
-            "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
-            "disabled:cursor-not-allowed disabled:opacity-60"
-          )}
-        />
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs text-foreground-muted">
+            Paste your function, method, or class here
+          </p>
+          <button
+            onClick={handleTryExample}
+            disabled={isLoading}
+            className="text-xs font-semibold text-accent-primary hover:text-accent-secondary transition-colors"
+          >
+            Try Example
+          </button>
+        </div>
+        <div className="overflow-hidden rounded-xl border border-border bg-background/70">
+          <MonacoEditor
+            height="320px"
+            language={language}
+            theme="vs-dark"
+            value={code}
+            onChange={(value) => setCode(value ?? "")}
+            options={{
+              fontSize: 13,
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              wordWrap: "on",
+              readOnly: isLoading,
+            }}
+          />
+        </div>
       </div>
 
       {/* Configuration Grid */}

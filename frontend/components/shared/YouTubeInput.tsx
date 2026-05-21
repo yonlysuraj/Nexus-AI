@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AlertCircle, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
 
 interface YouTubeInputProps {
   onSubmit: (data: { youtubeUrl: string; seoKeywords?: string }) => void;
@@ -35,6 +36,10 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
     setVideoPreviewId(videoId);
   };
 
+  const handleTryExample = () => {
+    handleUrlChange('https://www.youtube.com/watch?v=M576WGiDBdQ');
+  };
+
   const handleSubmit = () => {
     if (!youtubeUrl.trim()) {
       alert('Please enter a YouTube URL');
@@ -53,13 +58,24 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
     });
   };
 
+  useKeyboardShortcut(handleSubmit, isLoading || !youtubeUrl.trim());
+
   return (
     <div className="space-y-6">
       {/* URL Input */}
       <div>
-        <label className="block text-sm font-semibold text-foreground mb-1">
-          YouTube URL
-        </label>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-sm font-semibold text-foreground">
+            YouTube URL
+          </label>
+          <button
+            onClick={handleTryExample}
+            disabled={isLoading}
+            className="text-xs font-semibold text-accent-primary hover:text-accent-secondary transition-colors"
+          >
+            Try Example
+          </button>
+        </div>
         <p className="text-xs text-foreground-muted mb-3">
           Paste a YouTube video URL (youtube.com, youtu.be, or youtube.com/embed)
         </p>

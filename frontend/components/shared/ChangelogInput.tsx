@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
 
 type InputMode = 'paste' | 'repo';
 
@@ -17,6 +18,12 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
   const [pasteValue, setPasteValue] = useState('');
   const [repoUrl, setRepoUrl] = useState('');
   const [branch, setBranch] = useState('main');
+
+  const handleTryExample = () => {
+    setMode('repo');
+    setRepoUrl('https://github.com/fastapi/fastapi');
+    setBranch('master');
+  };
 
   const handleSubmit = () => {
     if (mode === 'paste') {
@@ -33,6 +40,10 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
       onSubmit({ mode: 'repo', value: repoUrl, branch });
     }
   };
+
+  const isDisabled = isLoading || (!pasteValue.trim() && mode === 'paste') || (!repoUrl.trim() && mode === 'repo');
+
+  useKeyboardShortcut(handleSubmit, isDisabled);
 
   return (
     <div className="space-y-6">
@@ -59,6 +70,14 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
           )}
         >
           GitHub Repository
+        </button>
+        <div className="flex-1" />
+        <button
+          onClick={handleTryExample}
+          disabled={isLoading}
+          className="px-2 py-2 text-xs font-semibold text-accent-primary hover:text-accent-secondary transition-colors"
+        >
+          Try Example
         </button>
       </div>
 
@@ -136,7 +155,7 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
       {/* Submit Button */}
       <button
         onClick={handleSubmit}
-        disabled={isLoading || (!pasteValue.trim() && mode === 'paste') || (!repoUrl.trim() && mode === 'repo')}
+        disabled={isDisabled}
         className={cn(
           "w-full rounded-xl px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-default sm:w-auto",
           "bg-gradient-to-r from-accent-primary to-accent-secondary",

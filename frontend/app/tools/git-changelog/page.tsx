@@ -8,6 +8,7 @@ import { ToolPageTemplate } from '@/components/shared/ToolPageTemplate';
 import { ChangelogInput } from '@/components/shared/ChangelogInput';
 import { ChangelogPreview } from '@/components/shared/ChangelogPreview';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { OutputSkeleton } from '@/components/shared/OutputSkeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { OutputCard } from '@/components/shared/OutputCard';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -129,7 +130,12 @@ export default function GitChangelogPage() {
                 exit={{ opacity: 0 }}
                 className="py-12"
               >
-                <LoadingSpinner label={error ? 'Analyzing commits...' : 'Generating changelog...'} />
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <LoadingSpinner label={error ? 'Analyzing commits...' : 'Generating changelog...'} />
+                  </div>
+                  <OutputSkeleton />
+                </div>
               </motion.div>
             )}
 

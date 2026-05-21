@@ -9,19 +9,44 @@ import { FileUpload } from "@/components/shared/FileUpload";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend
-} from "recharts";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+import dynamic from "next/dynamic";
+const ResponsiveContainer = dynamic(
+  () => import("recharts").then((mod) => mod.ResponsiveContainer),
+  { ssr: false }
+);
+const BarChart = dynamic(() => import("recharts").then((mod) => mod.BarChart), {
+  ssr: false,
+});
+const Bar = dynamic(() => import("recharts").then((mod) => mod.Bar), {
+  ssr: false,
+});
+const XAxis = dynamic(() => import("recharts").then((mod) => mod.XAxis), {
+  ssr: false,
+});
+const YAxis = dynamic(() => import("recharts").then((mod) => mod.YAxis), {
+  ssr: false,
+});
+const CartesianGrid = dynamic(
+  () => import("recharts").then((mod) => mod.CartesianGrid),
+  { ssr: false }
+);
+const Tooltip = dynamic(() => import("recharts").then((mod) => mod.Tooltip), {
+  ssr: false,
+});
+const PieChart = dynamic(
+  () => import("recharts").then((mod) => mod.PieChart),
+  { ssr: false }
+);
+const Pie = dynamic(() => import("recharts").then((mod) => mod.Pie), {
+  ssr: false,
+});
+const Cell = dynamic(() => import("recharts").then((mod) => mod.Cell), {
+  ssr: false,
+});
+const Legend = dynamic(() => import("recharts").then((mod) => mod.Legend), {
+  ssr: false,
+});
 
 type ExtractedData = {
   vendor: string;
@@ -120,8 +145,8 @@ export default function ReceiptTrackerPage() {
     }
   };
 
-  const handleSaveExpense = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveExpense = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!extractedData.length) return;
     
     setIsSaving(true);
@@ -173,6 +198,8 @@ export default function ReceiptTrackerPage() {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  useKeyboardShortcut(handleSaveExpense, isSaving || extractedData.length === 0);
 
   return (
     <AppShell>
