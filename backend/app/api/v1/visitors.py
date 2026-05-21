@@ -6,12 +6,12 @@ from typing import List, Dict, Any
 
 from app.db.session import get_db
 from app.models.visitors import Visitor
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 router = APIRouter()
 
 class VisitorCreate(BaseModel):
-    email: EmailStr
+    email: str
 
 @router.post("/", status_code=status.HTTP_200_OK)
 async def capture_email(visitor_in: VisitorCreate, db: AsyncSession = Depends(get_db)):
