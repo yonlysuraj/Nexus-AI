@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CheckCircle2, Circle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Task {
   description: string;
@@ -32,13 +33,13 @@ export function TaskList({ tasks, summary }: TaskListProps) {
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-red-300 dark:border-red-700';
+        return 'bg-error/10 text-error border-error/30';
       case 'medium':
-        return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-700';
+        return 'bg-warning/10 text-warning border-warning/30';
       case 'low':
-        return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-300 dark:border-green-700';
+        return 'bg-success/10 text-success border-success/30';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600';
+        return 'bg-background-secondary text-foreground-muted border-border';
     }
   };
 
@@ -47,25 +48,25 @@ export function TaskList({ tasks, summary }: TaskListProps) {
 
     switch (category.toLowerCase()) {
       case 'work':
-        return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200';
+        return 'bg-accent-primary/10 text-accent-primary';
       case 'personal':
-        return 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200';
+        return 'bg-accent-secondary/10 text-accent-secondary';
       case 'urgent':
-        return 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+        return 'bg-error/10 text-error';
       case 'follow-up':
-        return 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200';
+        return 'bg-warning/10 text-warning';
       case 'idea':
-        return 'bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200';
+        return 'bg-accent-secondary/10 text-accent-secondary';
       case 'research':
-        return 'bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200';
+        return 'bg-accent-primary/10 text-accent-primary';
       case 'meeting':
-        return 'bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200';
+        return 'bg-success/10 text-success';
       case 'bug':
-        return 'bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200';
+        return 'bg-error/10 text-error';
       case 'feature':
-        return 'bg-lime-100 dark:bg-lime-900 text-lime-800 dark:text-lime-200';
+        return 'bg-success/10 text-success';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200';
+        return 'bg-background-secondary text-foreground-secondary';
     }
   };
 
@@ -75,24 +76,24 @@ export function TaskList({ tasks, summary }: TaskListProps) {
   return (
     <div className="space-y-6">
       {/* Summary */}
-      <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">Summary</h3>
-        <p className="text-sm text-blue-800 dark:text-blue-300">{summary}</p>
+      <div className="bg-accent-primary/10 border border-accent-primary/30 rounded-xl p-5">
+        <h3 className="text-sm font-semibold text-accent-primary mb-2">Summary</h3>
+        <p className="text-sm text-foreground-secondary leading-relaxed">{summary}</p>
       </div>
 
       {/* Progress */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-sm font-semibold text-foreground">
             Tasks ({completedCount}/{tasks.length})
           </h3>
-          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          <span className="text-xs font-semibold text-accent-primary uppercase tracking-wide">
             {completionPercentage}% complete
           </span>
         </div>
-        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="h-2 bg-background-secondary rounded-full overflow-hidden border border-border">
           <div
-            className="h-full bg-blue-500 transition-all duration-300"
+            className="h-full bg-gradient-to-r from-accent-primary to-accent-secondary transition-all duration-500 ease-out"
             style={{ width: `${completionPercentage}%` }}
           />
         </div>
@@ -104,26 +105,30 @@ export function TaskList({ tasks, summary }: TaskListProps) {
           <div
             key={index}
             onClick={() => toggleTask(index)}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 cursor-pointer transition-all hover:shadow-md"
+            className={cn(
+              "bg-background-tertiary/50 border rounded-xl p-5 cursor-pointer transition-default hover:shadow-md",
+              completedTasks.has(index) ? "border-border opacity-70" : "border-border hover:border-accent-primary/40"
+            )}
           >
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-4">
               {/* Checkbox */}
-              <div className="mt-1">
+              <div className="mt-0.5">
                 {completedTasks.has(index) ? (
-                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
                 ) : (
-                  <Circle className="w-6 h-6 text-gray-400 dark:text-gray-600 flex-shrink-0" />
+                  <Circle className="w-5 h-5 text-foreground-muted flex-shrink-0 hover:text-accent-primary transition-colors" />
                 )}
               </div>
 
               {/* Task Content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start gap-2 mb-2 flex-wrap">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
                   {/* Priority Badge */}
                   <span
-                    className={`text-xs font-semibold px-2 py-1 rounded border ${getPriorityColor(
-                      task.priority
-                    )}`}
+                    className={cn(
+                      "text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded border",
+                      getPriorityColor(task.priority)
+                    )}
                   >
                     {task.priority}
                   </span>
@@ -131,9 +136,10 @@ export function TaskList({ tasks, summary }: TaskListProps) {
                   {/* Category Badge */}
                   {task.category && (
                     <span
-                      className={`text-xs font-medium px-2 py-1 rounded ${getCategoryColor(
-                        task.category
-                      )}`}
+                      className={cn(
+                        "text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded",
+                        getCategoryColor(task.category)
+                      )}
                     >
                       {task.category}
                     </span>
@@ -141,7 +147,7 @@ export function TaskList({ tasks, summary }: TaskListProps) {
 
                   {/* Time Estimate */}
                   {task.time_estimate && (
-                    <span className="text-xs text-gray-600 dark:text-gray-400 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">
+                    <span className="text-[10px] font-bold uppercase tracking-wide text-foreground-muted px-2 py-0.5 bg-background-secondary rounded border border-border">
                       {task.time_estimate}
                     </span>
                   )}
@@ -149,18 +155,19 @@ export function TaskList({ tasks, summary }: TaskListProps) {
 
                 {/* Description */}
                 <p
-                  className={`text-base font-medium mb-2 ${
+                  className={cn(
+                    "text-sm font-semibold mb-2 leading-relaxed transition-colors",
                     completedTasks.has(index)
-                      ? 'line-through text-gray-500 dark:text-gray-500'
-                      : 'text-gray-900 dark:text-white'
-                  }`}
+                      ? "line-through text-foreground-muted"
+                      : "text-foreground"
+                  )}
                 >
                   {task.description}
                 </p>
 
                 {/* Notes */}
                 {task.notes && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 italic">{task.notes}</p>
+                  <p className="text-xs text-foreground-secondary italic leading-relaxed">{task.notes}</p>
                 )}
               </div>
             </div>
@@ -170,8 +177,8 @@ export function TaskList({ tasks, summary }: TaskListProps) {
 
       {/* Empty State */}
       {tasks.length === 0 && (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <p>No tasks extracted from the transcript.</p>
+        <div className="text-center py-8 text-foreground-muted border border-dashed border-border rounded-xl bg-background/30">
+          <p className="text-sm">No tasks extracted from the transcript.</p>
         </div>
       )}
     </div>

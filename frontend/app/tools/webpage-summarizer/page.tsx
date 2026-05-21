@@ -116,7 +116,7 @@ export default function WebpageSummarizerPage() {
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://example.com/article"
                 className={cn(
-                  "flex-1 rounded-xl border border-border/70 bg-background/70 px-4 py-3 text-sm text-foreground",
+                  "flex-1 rounded-xl border border-border bg-background/70 px-4 py-3 text-sm text-foreground",
                   "placeholder:text-foreground-muted",
                   "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
                   "transition-default",
@@ -149,7 +149,7 @@ export default function WebpageSummarizerPage() {
                     "flex flex-col items-start rounded-xl border px-4 py-3 text-left transition-default",
                     level === l.value
                       ? "border-accent-primary/60 bg-accent-primary/10"
-                      : "border-border/70 hover:border-accent-primary/40"
+                      : "border-border hover:border-accent-primary/40"
                   )}
                 >
                   <span
@@ -210,7 +210,7 @@ export default function WebpageSummarizerPage() {
                     <button
                       type="button"
                       onClick={handleRetry}
-                      className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                      className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                     >
                       Retry
                     </button>
@@ -240,7 +240,7 @@ export default function WebpageSummarizerPage() {
                 >
                   <div className="space-y-4">
                     {/* Summary content */}
-                    <div className="whitespace-pre-wrap rounded-xl border border-border/40 bg-background-tertiary/50 p-5 text-sm leading-relaxed text-foreground">
+                    <div className="whitespace-pre-wrap rounded-xl border border-border bg-background-tertiary/50 p-5 text-sm leading-relaxed text-foreground">
                       {summaryText}
                       {isLoading && (
                         <span className="ml-1 inline-block h-4 w-0.5 animate-pulse bg-accent-primary" />
@@ -249,11 +249,11 @@ export default function WebpageSummarizerPage() {
 
                     {/* Meta row */}
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium text-foreground-muted">
+                      <span className="rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground-muted">
                         {LEVELS.find((l) => l.value === level)?.label}
                       </span>
                       {contentLength > 0 && (
-                        <span className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium text-foreground-muted">
+                        <span className="rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground-muted">
                           {contentLength.toLocaleString()} chars extracted
                         </span>
                       )}
@@ -280,7 +280,7 @@ export default function WebpageSummarizerPage() {
                       <button
                         type="button"
                         onClick={handleTryExample}
-                        className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                        className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                       >
                         Try an Example
                       </button>

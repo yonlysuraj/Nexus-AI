@@ -32,7 +32,7 @@ export function DownloadButton({
       type="button"
       onClick={handleDownload}
       className={cn(
-        "rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default",
+        "rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default",
         "hover:border-accent-primary/60 hover:text-accent-primary",
         className
       )}

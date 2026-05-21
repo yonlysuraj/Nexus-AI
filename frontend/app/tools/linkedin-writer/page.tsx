@@ -112,7 +112,7 @@ export default function LinkedInWriterPage() {
               placeholder="Enter your key points, achievements, or ideas — one per line…"
               rows={6}
               className={cn(
-                "w-full resize-none rounded-xl border border-border/70 bg-background/70 px-4 py-3 text-sm text-foreground",
+                "w-full resize-none rounded-xl border border-border bg-background/70 px-4 py-3 text-sm text-foreground",
                 "placeholder:text-foreground-muted",
                 "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
                 "transition-default"
@@ -133,7 +133,7 @@ export default function LinkedInWriterPage() {
                     "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default",
                     tone === t.value
                       ? "border-accent-primary/60 bg-accent-primary/10 text-accent-primary"
-                      : "border-border/70 text-foreground-secondary hover:border-accent-primary/40 hover:text-foreground"
+                      : "border-border text-foreground-secondary hover:border-accent-primary/40 hover:text-foreground"
                   )}
                 >
                   {t.emoji} {t.label}
@@ -182,7 +182,7 @@ export default function LinkedInWriterPage() {
                     <button
                       type="button"
                       onClick={handleRetry}
-                      className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                      className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                     >
                       Retry
                     </button>
@@ -212,7 +212,7 @@ export default function LinkedInWriterPage() {
                 >
                   <div className="space-y-4">
                     {/* Post content */}
-                    <div className="whitespace-pre-wrap rounded-xl border border-border/40 bg-background-tertiary/50 p-5 text-sm leading-relaxed text-foreground">
+                    <div className="whitespace-pre-wrap rounded-xl border border-border bg-background-tertiary/50 p-5 text-sm leading-relaxed text-foreground">
                       {parsedPost}
                       {isLoading && (
                         <span className="ml-1 inline-block h-4 w-0.5 animate-pulse bg-accent-primary" />
@@ -232,7 +232,7 @@ export default function LinkedInWriterPage() {
                           charStatus === "over" &&
                             "border-error/30 bg-error/10 text-error",
                           charStatus === "neutral" &&
-                            "border-border/70 text-foreground-muted"
+                            "border-border text-foreground-muted"
                         )}
                       >
                         {charCount} / {LINKEDIN_CHAR_LIMIT} chars
@@ -274,7 +274,7 @@ export default function LinkedInWriterPage() {
                       <button
                         type="button"
                         onClick={handleTryExample}
-                        className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                        className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                       >
                         Try an Example
                       </button>

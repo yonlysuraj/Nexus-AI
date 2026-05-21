@@ -142,7 +142,8 @@ export default function CodeExplainerPage() {
       badges.push({ label: "Imports", value: `${stats.import_count}` });
     }
     return badges;
-  }, [detectedLanguage, stats]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detectedLanguage, JSON.stringify(stats)]);
 
   return (
     <AppShell>
@@ -153,7 +154,7 @@ export default function CodeExplainerPage() {
           <button
             type="button"
             onClick={handleTryExample}
-            className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+            className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
           >
             Try Example
           </button>
@@ -170,7 +171,7 @@ export default function CodeExplainerPage() {
                 {code.length} chars
               </span>
             </div>
-            <div className="overflow-hidden rounded-xl border border-border/70 bg-background/70">
+            <div className="overflow-hidden rounded-xl border border-border bg-background/70">
               <MonacoEditor
                 height="320px"
                 language={language === "auto" ? "plaintext" : language}
@@ -205,7 +206,7 @@ export default function CodeExplainerPage() {
                     "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default",
                     language === lang.value
                       ? "border-accent-primary/60 bg-accent-primary/10 text-accent-primary"
-                      : "border-border/70 text-foreground-secondary hover:border-accent-primary/40 hover:text-foreground"
+                      : "border-border text-foreground-secondary hover:border-accent-primary/40 hover:text-foreground"
                   )}
                 >
                   {lang.label}
@@ -227,7 +228,7 @@ export default function CodeExplainerPage() {
                     "flex flex-col items-start rounded-xl border px-4 py-3 text-left transition-default",
                     level === l.value
                       ? "border-accent-primary/60 bg-accent-primary/10"
-                      : "border-border/70 hover:border-accent-primary/40"
+                      : "border-border hover:border-accent-primary/40"
                   )}
                 >
                   <span
@@ -288,7 +289,7 @@ export default function CodeExplainerPage() {
                     <button
                       type="button"
                       onClick={handleRetry}
-                      className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                      className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                     >
                       Retry
                     </button>
@@ -317,7 +318,7 @@ export default function CodeExplainerPage() {
                   }
                 >
                   <div className="space-y-4">
-                    <div className="whitespace-pre-wrap rounded-xl border border-border/40 bg-background-tertiary/50 p-5 text-sm leading-relaxed text-foreground">
+                    <div className="whitespace-pre-wrap rounded-xl border border-border bg-background-tertiary/50 p-5 text-sm leading-relaxed text-foreground">
                       {explanationText}
                       {isLoading && (
                         <span className="ml-1 inline-block h-4 w-0.5 animate-pulse bg-accent-primary" />
@@ -329,7 +330,7 @@ export default function CodeExplainerPage() {
                         {statsBadges.map((badge) => (
                           <span
                             key={`${badge.label}-${badge.value}`}
-                            className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium text-foreground-muted"
+                            className="rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground-muted"
                           >
                             {badge.label}: {badge.value}
                           </span>

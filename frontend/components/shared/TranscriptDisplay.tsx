@@ -24,35 +24,35 @@ export function TranscriptDisplay({
   const shouldShowToggle = isLong;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Transcript</h3>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-foreground">Transcript Content</h3>
         <CopyButton text={transcript} />
       </div>
 
       {/* Metadata */}
       <div className="grid grid-cols-3 gap-4 text-sm">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-          <p className="text-gray-600 dark:text-gray-400">Duration</p>
-          <p className="font-medium text-gray-900 dark:text-white">{duration.toFixed(1)}s</p>
+        <div className="bg-background-tertiary/50 border border-border rounded-xl p-4">
+          <p className="text-xs font-semibold text-foreground-muted uppercase tracking-wide mb-1">Duration</p>
+          <p className="font-bold text-foreground">{duration.toFixed(1)}s</p>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-          <p className="text-gray-600 dark:text-gray-400">Language</p>
-          <p className="font-medium text-gray-900 dark:text-white uppercase">{language}</p>
+        <div className="bg-background-tertiary/50 border border-border rounded-xl p-4">
+          <p className="text-xs font-semibold text-foreground-muted uppercase tracking-wide mb-1">Language</p>
+          <p className="font-bold text-foreground uppercase">{language}</p>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-          <p className="text-gray-600 dark:text-gray-400">Confidence</p>
-          <p className="font-medium text-gray-900 dark:text-white">
+        <div className="bg-background-tertiary/50 border border-border rounded-xl p-4">
+          <p className="text-xs font-semibold text-foreground-muted uppercase tracking-wide mb-1">Confidence</p>
+          <p className="font-bold text-foreground">
             {(confidence * 100).toFixed(1)}%
           </p>
         </div>
       </div>
 
       {/* Transcript Text */}
-      <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-        <pre className="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words leading-relaxed">
+      <div className="bg-background-secondary/50 rounded-xl p-5 border border-border">
+        <pre className="font-mono text-sm text-foreground-secondary whitespace-pre-wrap break-words leading-relaxed">
           {displayText}
-          {!isExpanded && isLong && '...'}
+          {!isExpanded && isLong && <span className="text-accent-primary">...</span>}
         </pre>
       </div>
 
@@ -60,16 +60,16 @@ export function TranscriptDisplay({
       {shouldShowToggle && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-wide text-foreground-muted hover:text-foreground hover:bg-background-secondary/80 rounded-xl transition-default border border-transparent hover:border-border"
         >
           {isExpanded ? (
             <>
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="w-4 h-4 text-accent-primary" />
               Show Less
             </>
           ) : (
             <>
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4 text-accent-primary" />
               Show More
             </>
           )}

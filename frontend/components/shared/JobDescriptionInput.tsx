@@ -76,7 +76,7 @@ export function JobDescriptionInput({
         placeholder="Paste the full job description here..."
         rows={14}
         className={cn(
-          "w-full resize-y rounded-xl border border-border/70 bg-background/70 px-4 py-3 font-mono text-sm leading-relaxed text-foreground",
+          "w-full resize-y rounded-xl border border-border bg-background/70 px-4 py-3 font-mono text-sm leading-relaxed text-foreground",
           "placeholder:text-foreground-muted transition-default",
           "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
           "disabled:cursor-not-allowed disabled:opacity-60"
@@ -94,7 +94,7 @@ export function JobDescriptionInput({
               type="button"
               onClick={() => updateText("")}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-secondary transition-default hover:border-error/50 hover:text-error disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-secondary transition-default hover:border-error/50 hover:text-error disabled:opacity-60"
             >
               <Trash2 className="h-4 w-4" />
               Clear
@@ -104,7 +104,7 @@ export function JobDescriptionInput({
             type="button"
             onClick={() => updateText(SAMPLE_JD)}
             disabled={isLoading}
-            className="rounded-full border border-border/70 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-secondary transition-default hover:border-accent-primary/60 hover:text-accent-primary disabled:opacity-60"
+            className="rounded-full border border-border px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-secondary transition-default hover:border-accent-primary/60 hover:text-accent-primary disabled:opacity-60"
           >
             Use Sample
           </button>

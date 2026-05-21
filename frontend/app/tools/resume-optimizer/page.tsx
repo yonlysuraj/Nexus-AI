@@ -101,7 +101,7 @@ export default function ResumeOptimizerPage() {
       >
         <div className="space-y-6">
           <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-            <section className="space-y-4 rounded-2xl border border-border/70 bg-background-secondary/50 p-5">
+            <section className="space-y-4 rounded-2xl border border-border bg-background-secondary/50 p-5">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">
                   Resume
@@ -113,7 +113,7 @@ export default function ResumeOptimizerPage() {
               <ResumeUpload onUpload={setResumeFile} isLoading={isLoading} />
             </section>
 
-            <section className="space-y-4 rounded-2xl border border-border/70 bg-background-secondary/50 p-5">
+            <section className="space-y-4 rounded-2xl border border-border bg-background-secondary/50 p-5">
               <JobDescriptionInput
                 onInput={setJobDescription}
                 isLoading={isLoading}
@@ -121,7 +121,7 @@ export default function ResumeOptimizerPage() {
             </section>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-background/70 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background/70 p-4">
             <p className="text-sm text-foreground-secondary">
               Ready when a resume is selected and the job description has enough
               detail to compare.
@@ -151,7 +151,7 @@ export default function ResumeOptimizerPage() {
                   type="button"
                   onClick={handleAnalyze}
                   disabled={!canAnalyze}
-                  className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary disabled:opacity-50"
+                  className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary disabled:opacity-50"
                 >
                   Retry
                 </button>

@@ -2,6 +2,7 @@
 
 import ReactMarkdown from 'react-markdown';
 import { CopyButton } from './CopyButton';
+import { cn } from '@/lib/utils';
 
 interface ChangelogStatistics {
   total: number;
@@ -31,28 +32,28 @@ export function ChangelogPreview({
     <div className="space-y-6">
       {/* Metadata */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-          <p className="text-sm text-blue-600 dark:text-blue-400">Total Commits</p>
-          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{commitCount}</p>
+        <div className="bg-accent-primary/10 rounded-xl p-4 border border-accent-primary/30">
+          <p className="text-sm text-accent-primary">Total Commits</p>
+          <p className="text-2xl font-bold text-foreground">{commitCount}</p>
         </div>
 
-        <div className="bg-green-50 dark:bg-green-950 rounded-lg p-4 border border-green-200 dark:border-green-800">
-          <p className="text-sm text-green-600 dark:text-green-400">New Features</p>
-          <p className="text-2xl font-bold text-green-900 dark:text-green-100">
+        <div className="bg-accent-secondary/10 rounded-xl p-4 border border-accent-secondary/30">
+          <p className="text-sm text-accent-secondary">New Features</p>
+          <p className="text-2xl font-bold text-foreground">
             {categories['feat'] || 0}
           </p>
         </div>
 
-        <div className="bg-orange-50 dark:bg-orange-950 rounded-lg p-4 border border-orange-200 dark:border-orange-800">
-          <p className="text-sm text-orange-600 dark:text-orange-400">Bug Fixes</p>
-          <p className="text-2xl font-bold text-orange-900 dark:text-orange-100">
+        <div className="bg-warning/10 rounded-xl p-4 border border-warning/30">
+          <p className="text-sm text-warning">Bug Fixes</p>
+          <p className="text-2xl font-bold text-foreground">
             {categories['fix'] || 0}
           </p>
         </div>
 
-        <div className="bg-purple-50 dark:bg-purple-950 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
-          <p className="text-sm text-purple-600 dark:text-purple-400">Contributors</p>
-          <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">
+        <div className="bg-success/10 rounded-xl p-4 border border-success/30">
+          <p className="text-sm text-success">Contributors</p>
+          <p className="text-2xl font-bold text-foreground">
             {authors.length}
           </p>
         </div>
@@ -60,18 +61,18 @@ export function ChangelogPreview({
 
       {/* Category Breakdown */}
       {Object.keys(categories).length > 0 && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Commit Breakdown</h3>
+        <div className="bg-background-tertiary/50 border border-border rounded-xl p-5">
+          <h3 className="font-semibold text-foreground mb-4">Commit Breakdown</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {Object.entries(categories).map(([type, count]) => (
               <div
                 key={type}
-                className="bg-gray-50 dark:bg-gray-700 rounded p-3 flex items-center justify-between"
+                className="bg-background-secondary/70 rounded-lg p-3 flex items-center justify-between border border-border"
               >
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
+                <span className="text-sm font-semibold text-foreground capitalize">
                   {type}
                 </span>
-                <span className="text-lg font-bold text-gray-900 dark:text-white">{count}</span>
+                <span className="text-lg font-bold text-foreground">{count}</span>
               </div>
             ))}
           </div>
@@ -79,31 +80,31 @@ export function ChangelogPreview({
       )}
 
       {/* Changelog Content */}
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Changelog</h2>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-foreground">Changelog Output</h3>
           <CopyButton text={changelog} />
         </div>
 
-        <div className="prose dark:prose-invert max-w-none overflow-x-auto">
+        <div className="prose prose-sm prose-invert max-w-none rounded-xl border border-border bg-background-tertiary/50 p-5 overflow-x-auto text-foreground">
           <ReactMarkdown
             components={{
-              h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-4 mb-2" {...props} />,
-              h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-3 mb-2" {...props} />,
-              h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-2 mb-1" {...props} />,
-              p: ({ node, ...props }) => <p className="text-gray-700 dark:text-gray-300 my-2" {...props} />,
+              h1: ({ node, ...props }) => <h1 className="text-xl font-bold mt-4 mb-2 text-foreground" {...props} />,
+              h2: ({ node, ...props }) => <h2 className="text-lg font-bold mt-3 mb-2 text-foreground" {...props} />,
+              h3: ({ node, ...props }) => <h3 className="text-base font-semibold mt-2 mb-1 text-foreground" {...props} />,
+              p: ({ node, ...props }) => <p className="text-foreground-secondary my-2 leading-relaxed" {...props} />,
               ul: ({ node, ...props }) => (
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 my-2" {...props} />
+                <ul className="list-disc list-inside text-foreground-secondary my-2" {...props} />
               ),
               li: ({ node, ...props }) => <li className="my-1" {...props} />,
               code: ({ node, ...props }) => (
                 <code
-                  className="rounded bg-gray-100 px-1 text-sm dark:bg-gray-700"
+                  className="rounded bg-background-secondary px-1.5 py-0.5 text-xs text-foreground font-mono"
                   {...props}
                 />
               ),
               blockquote: ({ node, ...props }) => (
-                <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-2 text-gray-600 dark:text-gray-400" {...props} />
+                <blockquote className="border-l-4 border-border pl-4 my-2 text-foreground-muted" {...props} />
               ),
             }}
           >

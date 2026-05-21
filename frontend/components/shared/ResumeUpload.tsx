@@ -93,12 +93,12 @@ export function ResumeUpload({
       ) : null}
 
       {resumePreview ? (
-        <div className="rounded-xl border border-border/70 bg-background/70 p-4">
+        <div className="rounded-xl border border-border bg-background/70 p-4">
           <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
             <FileText className="h-4 w-4 text-accent-secondary" />
             Resume Preview
           </div>
-          <div className="max-h-32 overflow-y-auto rounded-lg border border-border/50 bg-background-tertiary/60 p-3 font-mono text-xs leading-relaxed text-foreground-secondary">
+          <div className="max-h-32 overflow-y-auto rounded-lg border border-border bg-background-tertiary/60 p-3 font-mono text-xs leading-relaxed text-foreground-secondary">
             {resumePreview}
           </div>
         </div>

@@ -18,7 +18,7 @@ export function ATSTips({ tips }: ATSTipsProps) {
   const visibleTips = tips.length > 0 ? tips : FALLBACK_TIPS;
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-background/70 p-5 shadow-sm">
+    <div className="rounded-2xl border border-border bg-background/70 p-5 shadow-sm">
       <h3 className="text-lg font-semibold text-foreground">ATS Tips</h3>
       <p className="mt-1 text-sm text-foreground-muted">
         Practical fixes to improve parser readability and keyword alignment.
@@ -28,7 +28,7 @@ export function ATSTips({ tips }: ATSTipsProps) {
         {visibleTips.map((tip, index) => (
           <li
             key={`${tip}-${index}`}
-            className="flex gap-3 rounded-xl border border-border/60 bg-background-secondary/50 p-3 text-sm text-foreground-secondary"
+            className="flex gap-3 rounded-xl border border-border bg-background-secondary/50 p-3 text-sm text-foreground-secondary"
           >
             <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-success" />
             <span>{tip}</span>

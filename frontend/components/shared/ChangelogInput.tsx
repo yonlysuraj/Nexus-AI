@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type InputMode = 'paste' | 'repo';
 
 interface ChangelogInputProps {
-  onSubmit: (data: { mode: 'paste' | 'repo'; value: string; branch?: string }) => void;
+  onSubmit: (data: { mode: InputMode; value: string; branch?: string }) => void;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -34,26 +35,28 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex gap-4 border-b border-border">
         <button
           onClick={() => setMode('paste')}
-          className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+          className={cn(
+            "px-2 py-2 text-sm font-semibold transition-colors border-b-2",
             mode === 'paste'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
-          }`}
+              ? "border-accent-primary text-accent-primary"
+              : "border-transparent text-foreground-secondary hover:text-foreground hover:border-border"
+          )}
         >
           Paste Commit Log
         </button>
         <button
           onClick={() => setMode('repo')}
-          className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+          className={cn(
+            "px-2 py-2 text-sm font-semibold transition-colors border-b-2",
             mode === 'repo'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
-          }`}
+              ? "border-accent-primary text-accent-primary"
+              : "border-transparent text-foreground-secondary hover:text-foreground hover:border-border"
+          )}
         >
           GitHub Repository
         </button>
@@ -63,26 +66,31 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
       <div className="space-y-4">
         {mode === 'paste' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-foreground mb-1">
               Commit Log
             </label>
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
-              Paste output from: <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">git log --oneline</code>
+            <p className="text-xs text-foreground-muted mb-3">
+              Paste output from: <code className="bg-background-tertiary px-1.5 py-0.5 rounded text-foreground-secondary font-mono">git log --oneline</code>
             </p>
             <textarea
               value={pasteValue}
               onChange={(e) => setPasteValue(e.target.value)}
               disabled={isLoading}
-              placeholder={`abc1234 Initial commit\ndef5678 Add feature\ngh9012 Fix bug`}
-              className="w-full h-48 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50 font-mono text-sm"
+              placeholder="abc1234 Initial commit\ndef5678 Add feature\ngh9012 Fix bug"
+              className={cn(
+                "w-full h-48 px-4 py-3 rounded-xl border border-border bg-background/70 font-mono text-sm leading-relaxed text-foreground",
+                "placeholder:text-foreground-muted transition-default",
+                "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
+                "disabled:cursor-not-allowed disabled:opacity-60"
+              )}
             />
           </div>
         )}
 
         {mode === 'repo' && (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-foreground mb-1">
                 Repository URL
               </label>
               <input
@@ -91,15 +99,20 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
                 onChange={(e) => setRepoUrl(e.target.value)}
                 disabled={isLoading}
                 placeholder="https://github.com/user/repository"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50"
+                className={cn(
+                  "w-full rounded-xl border border-border bg-background/70 px-4 py-3 text-sm text-foreground",
+                  "placeholder:text-foreground-muted transition-default",
+                  "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
+                  "disabled:cursor-not-allowed disabled:opacity-60"
+                )}
               />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-foreground-muted mt-2">
                 Enter HTTPS URL only (SSH not supported)
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-foreground mb-1">
                 Branch
               </label>
               <input
@@ -108,7 +121,12 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
                 onChange={(e) => setBranch(e.target.value)}
                 disabled={isLoading}
                 placeholder="main"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50"
+                className={cn(
+                  "w-full rounded-xl border border-border bg-background/70 px-4 py-3 text-sm text-foreground",
+                  "placeholder:text-foreground-muted transition-default",
+                  "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
+                  "disabled:cursor-not-allowed disabled:opacity-60"
+                )}
               />
             </div>
           </div>
@@ -119,11 +137,17 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
       <button
         onClick={handleSubmit}
         disabled={isLoading || (!pasteValue.trim() && mode === 'paste') || (!repoUrl.trim() && mode === 'repo')}
-        className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
+        className={cn(
+          "w-full rounded-xl px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-default sm:w-auto",
+          "bg-gradient-to-r from-accent-primary to-accent-secondary",
+          (!isLoading && ((pasteValue.trim() && mode === 'paste') || (repoUrl.trim() && mode === 'repo')))
+            ? "hover:brightness-110 hover:shadow-lg hover:shadow-accent-primary/20"
+            : "cursor-not-allowed opacity-50"
+        )}
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
             Processing...
           </span>
         ) : (
@@ -133,11 +157,11 @@ export function ChangelogInput({ onSubmit, isLoading = false, error }: Changelog
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+        <div className="bg-error/10 border border-error/30 rounded-xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-red-900 dark:text-red-200">Error</p>
-            <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+            <p className="font-semibold text-error">Error</p>
+            <p className="text-sm text-error/80 mt-1">{error}</p>
           </div>
         </div>
       )}

@@ -23,7 +23,7 @@ export function CopyButton({ text, label = "Copy", className }: CopyButtonProps)
       type="button"
       onClick={handleCopy}
       className={cn(
-        "rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default",
+        "rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default",
         copied
           ? "border-accent-primary/60 text-accent-primary"
           : "hover:border-accent-secondary/60 hover:text-accent-secondary",

@@ -3,18 +3,23 @@
 import { useState } from 'react';
 import { Download, FileJson } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { AppShell } from '@/components/layout/AppShell';
 import { ToolPageTemplate } from '@/components/shared/ToolPageTemplate';
 import { AudioUpload } from '@/components/shared/AudioUpload';
 import { MicrophoneRecorder } from '@/components/shared/MicrophoneRecorder';
 import { TranscriptDisplay } from '@/components/shared/TranscriptDisplay';
 import { TaskList } from '@/components/shared/TaskList';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { EmptyState } from '@/components/shared/EmptyState';
+import { OutputCard } from '@/components/shared/OutputCard';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   exportTasksAsMarkdown,
   exportTasksAsJSON,
   downloadAsFile,
   generateFilename,
 } from '@/lib/taskExport';
+import { cn } from '@/lib/utils';
 
 interface Task {
   description: string;
@@ -49,7 +54,6 @@ export default function VoiceMemosPage() {
   };
 
   const handleRecordingComplete = (audioBlob: Blob) => {
-    // Convert blob to File
     const timestamp = new Date().toISOString().split('T')[0];
     const file = new File([audioBlob], `voice-memo-${timestamp}.webm`, {
       type: 'audio/webm',
@@ -134,164 +138,202 @@ export default function VoiceMemosPage() {
   };
 
   return (
-    <ToolPageTemplate
-      title="Voice Memos to Tasks"
-      description="Convert audio recordings into structured task lists with priorities and categories"
-      icon="🎤"
-    >
-      <div className="space-y-8">
-        {/* Input Section */}
-        <section className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-            Step 1: Upload or Record Audio
-          </h2>
-
-          <div className="space-y-6">
-            {/* Extraction Mode Selector */}
+    <AppShell>
+      <ToolPageTemplate
+        title="Voice Memos to Tasks"
+        description="Convert audio recordings into structured task lists with priorities and categories"
+      >
+        <div className="space-y-6">
+          {/* Input Section */}
+          <section className="space-y-6 rounded-2xl border border-border bg-background-secondary/50 p-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Task Extraction Mode
-              </label>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { id: 'structured', label: 'Structured', desc: 'Priority, category, time' },
-                  { id: 'detailed', label: 'Detailed', desc: 'With notes & dependencies' },
-                  { id: 'minimal', label: 'Minimal', desc: 'Description & priority' },
-                ].map((mode) => (
+              <h2 className="text-lg font-semibold text-foreground">
+                Step 1: Upload or Record Audio
+              </h2>
+            </div>
+
+            <div className="space-y-8">
+              {/* Extraction Mode Selector */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-3">
+                  Task Extraction Mode
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    { id: 'structured', label: 'Structured', desc: 'Priority, category, time' },
+                    { id: 'detailed', label: 'Detailed', desc: 'With notes & dependencies' },
+                    { id: 'minimal', label: 'Minimal', desc: 'Description & priority' },
+                  ].map((mode) => (
+                    <button
+                      key={mode.id}
+                      onClick={() =>
+                        setExtractionMode(mode.id as 'structured' | 'detailed' | 'minimal')
+                      }
+                      className={cn(
+                        "text-left p-4 rounded-xl border-2 transition-default",
+                        extractionMode === mode.id
+                          ? "border-accent-primary bg-accent-primary/10 shadow-sm shadow-accent-primary/10 text-accent-primary"
+                          : "border-border bg-background/50 hover:border-accent-primary/40 hover:bg-background/80 text-foreground"
+                      )}
+                    >
+                      <p className="font-semibold text-sm">
+                        {mode.label}
+                      </p>
+                      <p className={cn(
+                        "text-xs mt-1",
+                        extractionMode === mode.id ? "text-accent-primary/80" : "text-foreground-muted"
+                      )}>
+                        {mode.desc}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Upload Section */}
+              <div className="bg-background-tertiary/50 border border-border rounded-xl p-5">
+                <h3 className="text-sm font-semibold text-foreground mb-4">
+                  Upload Audio File
+                </h3>
+                <AudioUpload
+                  onFileSelect={handleFileSelect}
+                  isLoading={isLoading}
+                  error={uploadError}
+                />
+
+                {selectedFile && !result && (
                   <button
-                    key={mode.id}
-                    onClick={() =>
-                      setExtractionMode(mode.id as 'structured' | 'detailed' | 'minimal')
-                    }
-                    className={`text-left p-3 rounded-lg border-2 transition-all ${
-                      extractionMode === mode.id
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                    }`}
+                    onClick={handleUploadClick}
+                    disabled={isLoading}
+                    className={cn(
+                      "mt-5 w-full rounded-xl px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-default sm:w-auto",
+                      "bg-gradient-to-r from-accent-primary to-accent-secondary",
+                      !isLoading
+                        ? "hover:brightness-110 hover:shadow-lg hover:shadow-accent-primary/20"
+                        : "cursor-not-allowed opacity-50"
+                    )}
                   >
-                    <p className="font-medium text-sm text-gray-900 dark:text-white">
-                      {mode.label}
-                    </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{mode.desc}</p>
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        Processing...
+                      </span>
+                    ) : (
+                      'Process Audio'
+                    )}
                   </button>
-                ))}
+                )}
+              </div>
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-3 bg-background-secondary text-foreground-muted font-medium">
+                    OR
+                  </span>
+                </div>
+              </div>
+
+              {/* Microphone Section */}
+              <div className="bg-background-tertiary/50 border border-border rounded-xl p-5">
+                <h3 className="text-sm font-semibold text-foreground mb-4">
+                  Record from Microphone
+                </h3>
+                <MicrophoneRecorder
+                  onRecordingComplete={handleRecordingComplete}
+                  isLoading={isLoading}
+                />
               </div>
             </div>
+          </section>
 
-            {/* Upload Section */}
-            <div>
-              <h3 className="text-base font-medium text-gray-900 dark:text-white mb-4">
-                Upload Audio File
-              </h3>
-              <AudioUpload
-                onFileSelect={handleFileSelect}
-                isLoading={isLoading}
-                error={uploadError}
-              />
+          {/* Results Section */}
+          <AnimatePresence mode="wait">
+            {isLoading && !result && (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="py-12"
+              >
+                <div className="flex flex-col items-center justify-center">
+                  <LoadingSpinner label="Processing your audio... This may take a minute." />
+                </div>
+              </motion.div>
+            )}
 
-              {selectedFile && !result && (
-                <button
-                  onClick={handleUploadClick}
-                  disabled={isLoading}
-                  className="mt-4 w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
+            {result && (
+              <motion.div
+                key="results"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <OutputCard
+                  title="Step 2: Extracted Tasks & Transcript"
+                  actions={
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleExportJSON}
+                        className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-secondary/60 hover:text-accent-secondary flex items-center gap-2"
+                        title="Export as JSON"
+                      >
+                        <FileJson className="w-4 h-4" />
+                        JSON
+                      </button>
+                      <button
+                        onClick={handleExportMarkdown}
+                        className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary flex items-center gap-2"
+                        title="Export as Markdown"
+                      >
+                        <Download className="w-4 h-4" />
+                        Markdown
+                      </button>
+                    </div>
+                  }
                 >
-                  {isLoading ? 'Processing...' : 'Process Audio'}
-                </button>
-              )}
-            </div>
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="text-sm font-semibold text-foreground mb-4">Tasks</h3>
+                      <TaskList tasks={result.tasks} summary={result.summary} />
+                    </div>
 
-            {/* Divider */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400">
-                  OR
-                </span>
-              </div>
-            </div>
+                    <div className="border-t border-border pt-6">
+                      <h3 className="text-sm font-semibold text-foreground mb-4">Transcript</h3>
+                      <TranscriptDisplay
+                        transcript={result.transcript}
+                        language={result.language}
+                        duration={result.duration}
+                        confidence={result.confidence}
+                      />
+                    </div>
+                  </div>
+                </OutputCard>
+              </motion.div>
+            )}
 
-            {/* Microphone Section */}
-            <div>
-              <h3 className="text-base font-medium text-gray-900 dark:text-white mb-4">
-                Record from Microphone
-              </h3>
-              <MicrophoneRecorder
-                onRecordingComplete={handleRecordingComplete}
-                isLoading={isLoading}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center py-12">
-            <LoadingSpinner />
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
-              Processing your audio... This may take a minute.
-            </p>
-          </div>
-        )}
-
-        {/* Results Section */}
-        {result && (
-          <>
-            {/* Transcript */}
-            <section className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                Step 2: Transcript
-              </h2>
-              <TranscriptDisplay
-                transcript={result.transcript}
-                language={result.language}
-                duration={result.duration}
-                confidence={result.confidence}
-              />
-            </section>
-
-            {/* Tasks */}
-            <section className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                Step 3: Extracted Tasks
-              </h2>
-              <TaskList tasks={result.tasks} summary={result.summary} />
-            </section>
-
-            {/* Export Buttons */}
-            <section className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Export Results
-              </h2>
-              <div className="flex gap-3 flex-wrap">
-                <button
-                  onClick={handleExportMarkdown}
-                  className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-                >
-                  <Download className="w-5 h-5" />
-                  Export as Markdown
-                </button>
-                <button
-                  onClick={handleExportJSON}
-                  className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
-                >
-                  <FileJson className="w-5 h-5" />
-                  Export as JSON
-                </button>
-              </div>
-            </section>
-          </>
-        )}
-
-        {/* Empty State */}
-        {!result && !isLoading && (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            <p className="text-lg mb-2">Upload an audio file or record from your microphone</p>
-            <p className="text-sm">Supported formats: mp3, wav, m4a, flac, ogg (max 25MB)</p>
-          </div>
-        )}
-      </div>
-    </ToolPageTemplate>
+            {/* Empty State */}
+            {!result && !isLoading && (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <EmptyState
+                  title="Upload or record audio to begin"
+                  description="Supported formats: mp3, wav, m4a, flac, ogg (max 25MB). You can also record directly from your microphone."
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </ToolPageTemplate>
+    </AppShell>
   );
 }

@@ -138,7 +138,7 @@ function Metric({
   className: string;
 }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-background/70 p-3 text-center">
+    <div className="rounded-xl border border-border bg-background/70 p-3 text-center">
       <div className={cn("mx-auto flex items-center justify-center gap-1", className)}>
         {icon}
         <span className="text-2xl font-semibold">{value}</span>

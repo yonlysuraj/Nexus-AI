@@ -23,7 +23,7 @@ export function EmptyState({
       <button
         type="button"
         onClick={onAction}
-        className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+        className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
       >
         {actionLabel}
       </button>
@@ -32,7 +32,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-start gap-3 rounded-2xl border border-dashed border-border/70 bg-background/60 p-6",
+        "flex flex-col items-start gap-3 rounded-2xl border border-dashed border-border bg-background/60 p-6",
         className
       )}
     >

@@ -28,7 +28,7 @@ export function OptimizationSuggestions({
   };
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-background/70 p-5 shadow-sm">
+    <div className="rounded-2xl border border-border bg-background/70 p-5 shadow-sm">
       <div>
         <h3 className="text-lg font-semibold text-foreground">
           Optimization Suggestions
@@ -39,7 +39,7 @@ export function OptimizationSuggestions({
       </div>
 
       {suggestions.length === 0 ? (
-        <div className="mt-5 rounded-xl border border-border/60 bg-background-secondary/60 p-6 text-center text-sm text-foreground-muted">
+        <div className="mt-5 rounded-xl border border-border bg-background-secondary/60 p-6 text-center text-sm text-foreground-muted">
           No rewrite suggestions were returned for this match.
         </div>
       ) : (
@@ -52,7 +52,7 @@ export function OptimizationSuggestions({
             return (
               <div
                 key={`${suggestion.section_name}-${index}`}
-                className="overflow-hidden rounded-xl border border-border/70 bg-background-secondary/50"
+                className="overflow-hidden rounded-xl border border-border bg-background-secondary/50"
               >
                 <button
                   type="button"
@@ -76,7 +76,7 @@ export function OptimizationSuggestions({
                 </button>
 
                 {isOpen ? (
-                  <div className="space-y-4 border-t border-border/70 p-4">
+                  <div className="space-y-4 border-t border-border p-4">
                     <div className="grid gap-4 lg:grid-cols-2">
                       <SuggestionText
                         title="Original"
@@ -155,14 +155,14 @@ function SuggestionText({
         <button
           type="button"
           onClick={onCopy}
-          className="rounded-full border border-border/70 p-2 text-foreground-muted transition-default hover:border-accent-primary/50 hover:text-accent-primary"
+          className="rounded-full border border-border p-2 text-foreground-muted transition-default hover:border-accent-primary/50 hover:text-accent-primary"
           aria-label={`Copy ${title.toLowerCase()} text`}
           title={`Copy ${title.toLowerCase()} text`}
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
         </button>
       </div>
-      <div className="max-h-56 overflow-y-auto rounded-xl border border-border/60 bg-background/70 p-3 font-mono text-xs leading-relaxed text-foreground-secondary">
+      <div className="max-h-56 overflow-y-auto rounded-xl border border-border bg-background/70 p-3 font-mono text-xs leading-relaxed text-foreground-secondary">
         {highlighted}
       </div>
     </div>

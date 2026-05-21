@@ -17,7 +17,7 @@ export function ErrorState({
   return (
     <div
       className={cn(
-        "flex flex-col items-start gap-3 rounded-2xl border border-border/70 bg-background/70 p-6",
+        "flex flex-col items-start gap-3 rounded-2xl border border-border bg-background/70 p-6",
         className
       )}
     >

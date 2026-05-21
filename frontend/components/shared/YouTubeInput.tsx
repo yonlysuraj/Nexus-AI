@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AlertCircle, Play } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface YouTubeInputProps {
   onSubmit: (data: { youtubeUrl: string; seoKeywords?: string }) => void;
@@ -56,10 +57,10 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
     <div className="space-y-6">
       {/* URL Input */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-semibold text-foreground mb-1">
           YouTube URL
         </label>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+        <p className="text-xs text-foreground-muted mb-3">
           Paste a YouTube video URL (youtube.com, youtu.be, or youtube.com/embed)
         </p>
         <input
@@ -68,13 +69,18 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
           onChange={(e) => handleUrlChange(e.target.value)}
           disabled={isLoading}
           placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50"
+          className={cn(
+            "w-full px-4 py-2 rounded-xl border border-border bg-background/70 text-sm text-foreground",
+            "placeholder:text-foreground-muted transition-default",
+            "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
+            "disabled:cursor-not-allowed disabled:opacity-60"
+          )}
         />
       </div>
 
       {/* Video Preview */}
       {videoPreviewId && (
-        <div className="bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700">
+        <div className="bg-background-tertiary/50 rounded-xl overflow-hidden border border-border">
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <iframe
               className="absolute top-0 left-0 w-full h-full"
@@ -90,10 +96,10 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
 
       {/* SEO Keywords Input */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-semibold text-foreground mb-1">
           SEO Keywords (Optional)
         </label>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+        <p className="text-xs text-foreground-muted mb-3">
           Comma-separated keywords to optimize for (e.g., &quot;AI, machine learning, tutorial&quot;)
         </p>
         <input
@@ -102,7 +108,12 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
           onChange={(e) => setSeoKeywords(e.target.value)}
           disabled={isLoading}
           placeholder="e.g., Python, web development, coding tutorial"
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50"
+          className={cn(
+            "w-full px-4 py-2 rounded-xl border border-border bg-background/70 text-sm text-foreground",
+            "placeholder:text-foreground-muted transition-default",
+            "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
+            "disabled:cursor-not-allowed disabled:opacity-60"
+          )}
         />
       </div>
 
@@ -110,16 +121,22 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
       <button
         onClick={handleSubmit}
         disabled={isLoading || !youtubeUrl.trim()}
-        className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+        className={cn(
+          "w-full rounded-xl px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-default sm:w-auto flex items-center justify-center gap-2",
+          "bg-gradient-to-r from-accent-primary to-accent-secondary",
+          (!isLoading && youtubeUrl.trim())
+            ? "hover:brightness-110 hover:shadow-lg hover:shadow-accent-primary/20"
+            : "cursor-not-allowed opacity-50"
+        )}
       >
         {isLoading ? (
           <>
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
             Generating Blog Post...
           </>
         ) : (
           <>
-            <Play className="w-5 h-5" />
+            <Play className="w-4 h-4" />
             Generate Blog Post
           </>
         )}
@@ -127,19 +144,19 @@ export function YouTubeInput({ onSubmit, isLoading = false, error }: YouTubeInpu
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+        <div className="bg-error/10 border border-error/30 rounded-xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-red-900 dark:text-red-200">Error</p>
-            <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+            <p className="font-semibold text-error">Error</p>
+            <p className="text-sm text-error/80 mt-1">{error}</p>
           </div>
         </div>
       )}
 
       {/* Info Box */}
-      <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-        <p className="text-sm text-blue-900 dark:text-blue-100">
-          <strong>Tip:</strong> Videos with captions will generate faster. If no captions are available, we&apos;ll automatically extract the audio and transcribe it.
+      <div className="bg-accent-primary/10 border border-accent-primary/30 rounded-xl p-4">
+        <p className="text-sm text-accent-primary">
+          <strong className="font-semibold">Tip:</strong> Videos with captions will generate faster. If no captions are available, we&apos;ll automatically extract the audio and transcribe it.
         </p>
       </div>
     </div>

@@ -97,7 +97,7 @@ export default function ReadmeGeneratorPage() {
               onChange={(e) => setRepoUrl(e.target.value)}
               placeholder="https://github.com/owner/repo"
               className={cn(
-                "w-full rounded-xl border border-border/70 bg-background/70 px-4 py-3 text-sm text-foreground",
+                "w-full rounded-xl border border-border bg-background/70 px-4 py-3 text-sm text-foreground",
                 "placeholder:text-foreground-muted",
                 "focus:border-accent-primary/60 focus:outline-none focus:ring-1 focus:ring-accent-primary/30",
                 "transition-default",
@@ -155,7 +155,7 @@ export default function ReadmeGeneratorPage() {
                     <button
                       type="button"
                       onClick={handleGenerate}
-                      className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                      className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                     >
                       Retry
                     </button>
@@ -179,7 +179,7 @@ export default function ReadmeGeneratorPage() {
                       <button
                         type="button"
                         onClick={() => setShowPreview(!showPreview)}
-                        className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                        className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                       >
                         {showPreview ? "Edit" : "Preview"}
                       </button>
@@ -218,7 +218,7 @@ export default function ReadmeGeneratorPage() {
 
                     {/* Content area — preview or edit */}
                     {showPreview ? (
-                      <div className="prose prose-sm prose-invert max-w-none rounded-xl border border-border/40 bg-background-tertiary/50 p-5">
+                      <div className="prose prose-sm prose-invert max-w-none rounded-xl border border-border bg-background-tertiary/50 p-5">
                         <ReactMarkdown>{readmeText}</ReactMarkdown>
                         {isLoading && (
                           <span className="ml-1 inline-block h-4 w-0.5 animate-pulse bg-accent-primary" />
@@ -229,18 +229,18 @@ export default function ReadmeGeneratorPage() {
                         value={readmeText}
                         readOnly
                         rows={24}
-                        className="w-full resize-y rounded-xl border border-border/40 bg-background-tertiary/50 p-5 font-mono text-xs leading-relaxed text-foreground focus:outline-none"
+                        className="w-full resize-y rounded-xl border border-border bg-background-tertiary/50 p-5 font-mono text-xs leading-relaxed text-foreground focus:outline-none"
                       />
                     )}
 
                     {/* Meta */}
                     <div className="flex flex-wrap items-center gap-3">
                       {fileCount > 0 && (
-                        <span className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium text-foreground-muted">
+                        <span className="rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground-muted">
                           {fileCount} files analyzed
                         </span>
                       )}
-                      <span className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium text-foreground-muted">
+                      <span className="rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground-muted">
                         {readmeText.length.toLocaleString()} chars
                       </span>
                     </div>
@@ -266,7 +266,7 @@ export default function ReadmeGeneratorPage() {
                       <button
                         type="button"
                         onClick={handleTryExample}
-                        className="rounded-full border border-border/70 px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
+                        className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-default hover:border-accent-primary/60 hover:text-accent-primary"
                       >
                         Try an Example
                       </button>
