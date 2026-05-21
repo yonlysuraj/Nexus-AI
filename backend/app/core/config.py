@@ -41,6 +41,8 @@ class Settings(BaseSettings):
     MAX_DOCUMENT_SIZE: int = 10485760   # 10MB
     MAX_ARCHIVE_SIZE: int = 52428800    # 50MB
 
+    DATA_DIR: str = "./data"
+
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).resolve().parents[3] / ".env"),
         env_file_encoding="utf-8",
