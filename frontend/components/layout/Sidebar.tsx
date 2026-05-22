@@ -59,8 +59,7 @@ export function Sidebar() {
       <div className="rounded-2xl border border-border bg-background-secondary p-5 text-sm text-foreground-secondary shadow-sm">
         <p className="text-sm font-semibold">Status</p>
         <p className="mt-3">
-          Phase 0: Foundation setup in progress. Dashboard and core components
-          are ready to wire into the tools.
+          Phase 1: README Generator tool is now fully operational with advanced multi-file repository scanning, dynamic token limits, and strict Markdown rendering.
         </p>
       </div>
     </aside>

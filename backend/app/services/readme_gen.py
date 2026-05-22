@@ -52,7 +52,14 @@ _API_HEADERS = {
     "User-Agent": "NexusAI-README-Generator/1.0",
 }
 
-# Files we try to read for context
+# README filenames to ALWAYS exclude from file fetching
+_README_FILENAMES = {
+    "readme.md", "readme.rst", "readme.txt", "readme",
+    "readme.markdown", "readme.adoc",
+}
+
+# Config/dependency files we want to fetch for tech stack context
+# NOTE: README files are intentionally NOT in this list
 _KEY_FILES = [
     "package.json",
     "requirements.txt",
@@ -63,8 +70,6 @@ _KEY_FILES = [
     "build.gradle",
     "Gemfile",
     "composer.json",
-    "README.md",
-    "readme.md",
 ]
 
 
@@ -213,7 +218,7 @@ def _detect_tech_stack(items: list[dict]) -> dict:
         if item.get("type") != "blob":
             continue
         path = item["path"]
-        filename = path.split("/")[-1]
+        filename = path.split("/")[-1].lower()
         filenames.add(filename)
 
         # Detect languages by extension
@@ -250,21 +255,32 @@ def _detect_tech_stack(items: list[dict]) -> dict:
 
 
 # ────────────────────────────────────────────
-# Public API & Core Context Fetching
+# Core Context File Fetching
 # ────────────────────────────────────────────
+
+
+def _is_readme_file(path: str) -> bool:
+    """Return True if the path is a README file that should be excluded."""
+    filename = path.split("/")[-1].lower()
+    return filename in _README_FILENAMES
 
 
 async def _fetch_all_context_files(
     owner: str, repo: str, items: list[dict], branch: str
 ) -> dict[str, str]:
-    """Identify and fetch key configuration and core source files for codebase context."""
+    """Identify and fetch key configuration and core source files for codebase context.
+
+    README files are explicitly excluded — we never want to feed the existing
+    README to the LLM, as it will reproduce it instead of generating a new one.
+    """
     file_contents = {}
     core_files_to_fetch = []
 
-    # 1. Add standard config files
+    # 1. Add standard config files (excluding any README)
     for item in items:
         if item.get("type") == "blob" and item["path"] in _KEY_FILES:
-            core_files_to_fetch.append(item["path"])
+            if not _is_readme_file(item["path"]):
+                core_files_to_fetch.append(item["path"])
 
     # 2. Heuristically identify core source files
     source_candidates = []
@@ -278,6 +294,10 @@ async def _fetch_all_context_files(
             continue
         path = item["path"]
         filename = path.split("/")[-1].lower()
+
+        # Hard-exclude README files
+        if _is_readme_file(path):
+            continue
 
         # Skip non-code, config, or test files
         if any(
@@ -311,18 +331,28 @@ async def _fetch_all_context_files(
     # Sort candidates by priority desc, path length asc
     source_candidates.sort(key=lambda x: (-x[1], len(x[0])))
 
-    # Take top 6 source candidates that aren't already in key files
-    for path, _ in source_candidates[:6]:
+    # Take top 30 source candidates not already in key files (allows all agents to be fetched)
+    for path, _ in source_candidates[:30]:
         if path not in core_files_to_fetch:
             core_files_to_fetch.append(path)
 
-    # Fetch all identified files (capped to 12 files to avoid token overflow)
-    for path in core_files_to_fetch[:12]:
+    # Fetch all identified files (capped to 40 to leverage massive 128k LLM contexts)
+    for path in core_files_to_fetch[:40]:
+        # Final safety check — never fetch README files
+        if _is_readme_file(path):
+            logger.debug(f"Skipping README file: {path}")
+            continue
         content = await _fetch_file_content(owner, repo, path, branch)
         if content:
             file_contents[path] = content
 
+    logger.info(f"Fetched {len(file_contents)} context files: {list(file_contents.keys())}")
     return file_contents
+
+
+# ────────────────────────────────────────────
+# Public API
+# ────────────────────────────────────────────
 
 
 async def generate_readme(repo_url: str) -> dict:
@@ -342,15 +372,20 @@ async def generate_readme(repo_url: str) -> dict:
         f"frameworks={tech_stack['frameworks']}"
     )
 
-    # Fetch key file contents for context
+    # Fetch key file contents (README files excluded inside this function)
     file_contents = await _fetch_all_context_files(owner, repo, items, branch)
 
     # Generate README
     prompt = build_user_prompt(repo_name, file_tree, tech_stack, file_contents)
+    
+    logger.info(f"Context files passed to LLM: {list(file_contents.keys())}")
+    logger.info(f"Prompt length (chars): {len(prompt)}")
+
     readme = await ai_engine.generate(
         prompt=prompt,
         system=SYSTEM_PROMPT,
         temperature=0.6,
+        max_tokens=8000,
     )
 
     elapsed_ms = (time.perf_counter() - start) * 1000
@@ -392,16 +427,20 @@ async def stream_readme(repo_url: str) -> AsyncGenerator[str, None]:
     # Send metadata
     yield f"data: {json.dumps({'meta': {'repo_name': repo_name, 'tech_stack': tech_stack, 'file_count': file_count}})}\n\n"
 
-    # Fetch key files
+    # Fetch key files (README files excluded inside this function)
     file_contents = await _fetch_all_context_files(owner, repo, items, branch)
 
     prompt = build_user_prompt(repo_name, file_tree, tech_stack, file_contents)
+    
+    logger.info(f"Context files passed to LLM: {list(file_contents.keys())}")
+    logger.info(f"Prompt length (chars): {len(prompt)}")
 
     try:
         async for chunk in ai_engine.generate_stream(
             prompt=prompt,
             system=SYSTEM_PROMPT,
             temperature=0.6,
+            max_tokens=8000,
         ):
             yield f"data: {json.dumps({'token': chunk})}\n\n"
 
@@ -409,4 +448,3 @@ async def stream_readme(repo_url: str) -> AsyncGenerator[str, None]:
     except Exception as e:
         logger.error(f"README streaming failed: {e}")
         yield f"data: {json.dumps({'error': str(e)})}\n\n"
-

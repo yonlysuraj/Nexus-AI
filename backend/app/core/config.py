@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     
     DEFAULT_LLM_PROVIDER: str = "groq"
-    DEFAULT_MODEL: str = "llama-3.1-70b-versatile"
+    DEFAULT_MODEL: str = "llama-3.3-70b-versatile"
 
     # Database
     DATABASE_URL: str = "sqlite:///./data/nexusai.db"

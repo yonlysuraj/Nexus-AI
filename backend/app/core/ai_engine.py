@@ -61,6 +61,7 @@ class GroqProvider(LLMProvider):
                 messages=messages,
                 model=model,
                 temperature=kwargs.get("temperature", 0.7),
+                max_tokens=kwargs.get("max_tokens", 8000),
             )
             return response.choices[0].message.content
         except groq.RateLimitError as e:
@@ -116,6 +117,7 @@ class GroqProvider(LLMProvider):
                 messages=messages,
                 model=model,
                 temperature=kwargs.get("temperature", 0.7),
+                max_tokens=kwargs.get("max_tokens", 8000),
                 stream=True
             )
             async for chunk in stream:
@@ -147,6 +149,7 @@ class OpenAIProvider(LLMProvider):
                 messages=messages,
                 model=model,
                 temperature=kwargs.get("temperature", 0.7),
+                max_tokens=kwargs.get("max_tokens", 8000),
             )
             return response.choices[0].message.content
         except Exception as e:
@@ -196,6 +199,7 @@ class OpenAIProvider(LLMProvider):
                 messages=messages,
                 model=model,
                 temperature=kwargs.get("temperature", 0.7),
+                max_tokens=kwargs.get("max_tokens", 8000),
                 stream=True
             )
             async for chunk in stream:
