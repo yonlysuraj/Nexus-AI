@@ -43,7 +43,7 @@ async def log_requests(request: Request, call_next):
 
 # Rate Limiter setup
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler) # type: ignore
 
 @app.get("/api/v1/health", tags=["Health"])
 async def health_check():
@@ -77,7 +77,7 @@ app.include_router(changelog_router)
 app.include_router(test_generator_router)
 app.include_router(youtube_to_blog_router)
 app.include_router(resume_optimizer_router)
-app.include_router(receipt_tracker_router, prefix="/api/v1/receipt_tracker", tags=["Receipt Tracker"])
+app.include_router(receipt_tracker_router)
 app.include_router(visitors_router, prefix="/api/v1/visitors", tags=["Visitors"])
 
 # Mount static files for receipts

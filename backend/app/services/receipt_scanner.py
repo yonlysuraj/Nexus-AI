@@ -56,18 +56,16 @@ class ReceiptScannerService:
             "Respond with pure JSON."
         )
         
-        # We try to use a vision model (like Llama 3.2 Vision on Groq)
+        # We try to use a vision model (like Llama 4 Scout on Groq)
         try:
-            # We enforce model="llama-3.2-11b-vision-preview" or similar if we were sure of the ID, 
-            # but ai_engine will use its configured default (Groq API).
-            # We'll pass a specific model kwarg if needed, but for now we rely on the engine's default vision model.
+            # We enforce model="meta-llama/llama-4-scout-17b-16e-instruct" to ensure vision capabilities.
             response_text = await ai_engine.generate_with_image(
                 prompt=prompt,
                 system=system_prompt,
                 image_bytes=image_bytes,
                 mime_type="image/jpeg",
                 temperature=0.1, # Low temperature for factual extraction
-                model="llama-3.2-11b-vision-preview"
+                model="meta-llama/llama-4-scout-17b-16e-instruct"
             )
             
             # Clean response text to extract json if it contains markdown

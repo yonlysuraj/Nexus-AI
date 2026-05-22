@@ -250,8 +250,80 @@ def _detect_tech_stack(items: list[dict]) -> dict:
 
 
 # ────────────────────────────────────────────
-# Public API
+# Public API & Core Context Fetching
 # ────────────────────────────────────────────
+
+
+async def _fetch_all_context_files(
+    owner: str, repo: str, items: list[dict], branch: str
+) -> dict[str, str]:
+    """Identify and fetch key configuration and core source files for codebase context."""
+    file_contents = {}
+    core_files_to_fetch = []
+
+    # 1. Add standard config files
+    for item in items:
+        if item.get("type") == "blob" and item["path"] in _KEY_FILES:
+            core_files_to_fetch.append(item["path"])
+
+    # 2. Heuristically identify core source files
+    source_candidates = []
+    core_keywords = [
+        "main", "app", "orchestrator", "runner", "server",
+        "index", "workflow", "pipeline", "agent",
+    ]
+
+    for item in items:
+        if item.get("type") != "blob":
+            continue
+        path = item["path"]
+        filename = path.split("/")[-1].lower()
+
+        # Skip non-code, config, or test files
+        if any(
+            part in path.split("/")
+            for part in [
+                "tests", "test", "node_modules", ".git", "__pycache__",
+                ".venv", "venv", "dist", "build",
+            ]
+        ):
+            continue
+
+        # Only target key source extensions
+        if not any(
+            filename.endswith(ext)
+            for ext in [".py", ".ts", ".js", ".go", ".rs", ".tsx"]
+        ):
+            continue
+
+        # Prioritize files with core keywords in name
+        priority = 0
+        if any(kw in filename for kw in core_keywords):
+            priority += 2
+        if filename in [
+            "main.py", "app.py", "server.py", "index.ts", "index.js",
+            "orchestrator.py", "runner.py",
+        ]:
+            priority += 5
+
+        source_candidates.append((item["path"], priority))
+
+    # Sort candidates by priority desc, path length asc
+    source_candidates.sort(key=lambda x: (-x[1], len(x[0])))
+
+    # Take top 6 source candidates that aren't already in key files
+    for path, _ in source_candidates[:6]:
+        if path not in core_files_to_fetch:
+            core_files_to_fetch.append(path)
+
+    # Fetch all identified files (capped to 12 files to avoid token overflow)
+    for path in core_files_to_fetch[:12]:
+        content = await _fetch_file_content(owner, repo, path, branch)
+        if content:
+            file_contents[path] = content
+
+    return file_contents
+
 
 async def generate_readme(repo_url: str) -> dict:
     """Analyze a GitHub repo and generate a README."""
@@ -271,12 +343,7 @@ async def generate_readme(repo_url: str) -> dict:
     )
 
     # Fetch key file contents for context
-    file_contents = {}
-    for item in items:
-        if item.get("type") == "blob" and item["path"] in _KEY_FILES:
-            content = await _fetch_file_content(owner, repo, item["path"], branch)
-            if content:
-                file_contents[item["path"]] = content
+    file_contents = await _fetch_all_context_files(owner, repo, items, branch)
 
     # Generate README
     prompt = build_user_prompt(repo_name, file_tree, tech_stack, file_contents)
@@ -326,12 +393,7 @@ async def stream_readme(repo_url: str) -> AsyncGenerator[str, None]:
     yield f"data: {json.dumps({'meta': {'repo_name': repo_name, 'tech_stack': tech_stack, 'file_count': file_count}})}\n\n"
 
     # Fetch key files
-    file_contents = {}
-    for item in items:
-        if item.get("type") == "blob" and item["path"] in _KEY_FILES:
-            content = await _fetch_file_content(owner, repo, item["path"], branch)
-            if content:
-                file_contents[item["path"]] = content
+    file_contents = await _fetch_all_context_files(owner, repo, items, branch)
 
     prompt = build_user_prompt(repo_name, file_tree, tech_stack, file_contents)
 
@@ -347,3 +409,4 @@ async def stream_readme(repo_url: str) -> AsyncGenerator[str, None]:
     except Exception as e:
         logger.error(f"README streaming failed: {e}")
         yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
